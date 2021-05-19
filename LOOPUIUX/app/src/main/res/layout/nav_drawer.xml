@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+
+  <com.google.android.material.navigation.NavigationView
+      android:id="@+id/nav_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:fitsSystemWindows="true"
+      android:visibility="visible"
+      tools:layout_gravity="start"
+      tools:visibility="visible"
+      android:background="@drawable/side_nav_bar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+      <ImageView
+          android:id="@+id/imageView"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          app:srcCompat="@mipmap/loop_logo" />
+
+      <TextView
+          android:id="@+id/textView3"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:text="@string/navbar_text"
+          android:textColor="@color/dirty_white"
+          android:textSize="18sp" />
+    </LinearLayout>
+  </com.google.android.material.navigation.NavigationView>
+</merge>
