@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pt.rfernandes.loopuiux.model.PostContent
-import pt.rfernandes.loopuiux.ui.posts.Post
 
 class HomeViewModel : ViewModel() {
 
