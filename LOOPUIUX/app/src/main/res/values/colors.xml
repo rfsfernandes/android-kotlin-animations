@@ -6,5 +6,6 @@
   <color name="dark_gray">#3a4750</color>
   <color name="dirty_white">#eeeeee</color>
   <color name="black">#303841</color>
+  <color name="black_op_05">#80303841</color>
   <color name="white">#FFFFFFFF</color>
 </resources>

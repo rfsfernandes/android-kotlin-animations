@@ -21,7 +21,7 @@ class HomeViewModel : ViewModel() {
     private val _postsList = MutableLiveData<ArrayList<PostContent>>().apply {
         val postList = ArrayList<PostContent>()
 
-        for (i in 1 until 20) {
+        for (i in 1 until 10) {
             postList.add(PostContent(getImage(), title, content))
         }
 
