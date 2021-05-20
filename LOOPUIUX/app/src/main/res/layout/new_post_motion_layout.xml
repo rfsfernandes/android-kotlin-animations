@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:currentState="@id/set1_base"
+    app:motionDebug="NO_DEBUG"
+    app:showPaths="true"
+    app:layoutDescription="@xml/scene_filter"
+    tools:parentTag="androidx.constraintlayout.motion.widget.MotionLayout">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <View
+        android:id="@+id/sheetPlaceHolder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <pt.rfernandes.loopuiux.ui.utils.CircleCardView
+        android:id="@+id/fab"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        app:cardBackgroundColor="@color/red_700"
+        app:cardCornerRadius="@dimen/fab_radius"
+        app:cardElevation="@dimen/fab_elevation" />
+
+    <ImageView
+        android:id="@+id/newEntryIcon"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:elevation="34dp"
+        android:outlineProvider="none"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@id/fab"
+        app:layout_constraintEnd_toEndOf="@id/fab"
+        app:layout_constraintStart_toStartOf="@id/fab"
+        android:src="@drawable/ic_add" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/linearLayoutEntryForm"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/new_post_background"
+        android:elevation="33dp"
+        android:padding="16dp"
+        android:paddingBottom="@dimen/bottom_bar_height"
+        android:layout_marginBottom="@dimen/bottom_bar_height"
+        android:translationY="32dp"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@id/sheetPlaceHolder"
+        app:layout_constraintEnd_toEndOf="@id/sheetPlaceHolder"
+        app:layout_constraintStart_toStartOf="@id/sheetPlaceHolder"
+        app:layout_constraintTop_toTopOf="@id/sheetPlaceHolder">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <include
+                    layout="@layout/new_entry_upload_motion_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black"
+                    android:layout_marginTop="16dp"
+                    app:boxBackgroundColor="@color/dirty_white"
+                    app:boxStrokeColor="@color/red_700"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:counterOverflowTextColor="@color/red_700"
+                    app:counterTextColor="@color/dirty_white"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/title"
+                        android:textColor="@color/black"
+                        android:textColorHighlight="@color/red_700"
+                        android:maxLines="1"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:textColorHint="@color/black"
+                    app:boxBackgroundColor="@color/dirty_white"
+                    app:boxStrokeColor="@color/red_700"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="300"
+                    app:counterOverflowTextColor="@color/red_700"
+                    app:counterTextColor="@color/dirty_white"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="top"
+                        android:hint="@string/summary"
+                        android:inputType="textMultiLine|textImeMultiLine"
+                        android:lines="7"
+                        android:textColor="@color/black"
+                        android:textColorHighlight="@color/red_700" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomBarCardView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bottom_bar_height"
+        android:outlineProvider="none"
+        android:visibility="invisible"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="33dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/closeIcon"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:elevation="34dp"
+        android:outlineProvider="none"
+        android:scaleType="centerInside"
+        app:tint="#FFF"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/bottomBarCardView"
+        app:layout_constraintTop_toTopOf="@id/bottomBarCardView"
+        android:src="@drawable/ic_close" />
+</merge>

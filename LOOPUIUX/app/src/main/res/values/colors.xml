@@ -8,4 +8,14 @@
   <color name="black">#303841</color>
   <color name="black_op_05">#80303841</color>
   <color name="white">#FFFFFFFF</color>
+
+
+
+  <color name="colorPrimary">#18BDD6</color>
+  <color name="colorPrimaryDark">#0F6088</color>
+  <color name="colorAccent">#FF6284</color>
+  <color name="windowBackground">#51D1E2</color>
+
+
+
 </resources>

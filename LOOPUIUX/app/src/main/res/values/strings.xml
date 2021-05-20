@@ -9,4 +9,9 @@
 
   <string name="menu_home">Home</string>
   <string name="navbar_text">This is a challenge with the objective of testing my kotlin and UI/UX skills.</string>
+    <string name="url">Url</string>
+  <string name="upload">Upload</string>
+  <string name="choose_a_photo">Choose a photo</string>
+    <string name="summary">Summary</string>
+  <string name="title">Title</string>
 </resources>

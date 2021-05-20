@@ -2,6 +2,7 @@ package pt.rfernandes.loopuiux.ui.utils
 
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -9,6 +10,8 @@ import android.graphics.Point
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 
 /**
  *   File Utils created at 5/19/21 00:23 for the project LOOP UI&UX
@@ -61,4 +64,9 @@ inline val View.screenWidth: Int
 fun View.setScale(scale: Float) {
     this.scaleX = scale
     this.scaleY = scale
+}
+
+inline fun hideKeyboard(context:Context,view: View) {
+    val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
