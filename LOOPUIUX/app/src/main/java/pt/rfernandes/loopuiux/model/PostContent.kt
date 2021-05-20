@@ -5,5 +5,5 @@ package pt.rfernandes.loopuiux.model
  *   By: rodrigofernandes
  */
 class PostContent(val image: String, val title: String, val content: String) {
-
+    var isOpen: Boolean = false
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pt.rfernandes.loopuiux.model.PostContent
-import pt.rfernandes.loopuiux.ui.posts.Post
 
 class HomeViewModel : ViewModel() {
 
@@ -22,7 +21,7 @@ class HomeViewModel : ViewModel() {
     private val _postsList = MutableLiveData<ArrayList<PostContent>>().apply {
         val postList = ArrayList<PostContent>()
 
-        for (i in 1 until 20) {
+        for (i in 1 until 10) {
             postList.add(PostContent(getImage(), title, content))
         }
 
