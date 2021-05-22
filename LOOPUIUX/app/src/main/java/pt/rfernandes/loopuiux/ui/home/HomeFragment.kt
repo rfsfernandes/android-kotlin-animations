@@ -19,14 +19,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.adapters.CollapseCallback
+import pt.rfernandes.loopuiux.adapters.RecyclerViewCallback
 import pt.rfernandes.loopuiux.adapters.RecyclerViewAdapter
 import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding
 import pt.rfernandes.loopuiux.model.EntryContent
 import pt.rfernandes.loopuiux.ui.home.new_post.AddEntryMotionLayout
 
 
-class HomeFragment : Fragment(), CollapseCallback {
+class HomeFragment : Fragment(), RecyclerViewCallback {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val REQUEST_CODE = 234
@@ -58,15 +58,16 @@ class HomeFragment : Fragment(), CollapseCallback {
     }
 
     private fun initVariables() {
+
         addEntryMotionLayout =
             binding.root.findViewById(R.id.add_entry_motion_layout)
         buttonUpload = binding.root.findViewById(R.id.buttonUpload)
         textInputLayoutTitle = binding.root.findViewById(R.id.textInputLayoutTitle)
         textInputLayoutContent = binding.root.findViewById(R.id.textInputLayoutContent)
 
-        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this)
+        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this, binding.recyclerView)
         binding.recyclerView.adapter = recyclerViewAdapter
-        
+
         val lm = LinearLayoutManager(context)
         lm.reverseLayout = true
         lm.stackFromEnd = true
@@ -76,8 +77,6 @@ class HomeFragment : Fragment(), CollapseCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
-
-
 
         buttonUpload.setOnClickListener {
             openGalleryForImage()
@@ -217,7 +216,7 @@ class HomeFragment : Fragment(), CollapseCallback {
 
     }
 
-    override fun clicked(position: Int) {
+    override fun clickedItem(position: Int) {
         for (index in mEntryList.indices) {
             if (index != position && mEntryList[index].isOpen) {
                 mEntryList[index].isOpen = false
@@ -231,6 +230,8 @@ class HomeFragment : Fragment(), CollapseCallback {
                 break
             }
         }
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

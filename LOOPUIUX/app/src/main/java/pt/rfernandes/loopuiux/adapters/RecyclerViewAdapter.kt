@@ -1,27 +1,37 @@
 package pt.rfernandes.loopuiux.adapters
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.facebook.drawee.view.SimpleDraweeView
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.model.EntryContent
+import pt.rfernandes.loopuiux.ui.utils.getValueAnimator
+
 
 /**
  *   Class RecyclerViewAdapter created at 5/19/21 23:03 for the project LOOP UI&UX
  *   By: rodrigofernandes
  */
-class RecyclerViewAdapter(private val context: Context, private val callback: CollapseCallback) :
+class RecyclerViewAdapter(
+    private val context: Context,
+    private val callback: RecyclerViewCallback,
+    private val recyclerView: RecyclerView
+) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
-    private var postsList: List<EntryContent> = ArrayList()
+    private var postsList: ArrayList<EntryContent> = ArrayList()
     private var mPosition: Int = -1
 
     override fun onCreateViewHolder(
@@ -44,7 +54,7 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
                 )
             )
             model.hasBeenLoaded = true
-        } else if(!model.alreadySeen) {
+        } else if (!model.alreadySeen) {
             holder.rootView.startAnimation(
                 AnimationUtils.loadAnimation(
                     context,
@@ -62,12 +72,12 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
         var isOpen = model.isOpen
         var hasCompleted = true
 
-        val clickListener: View.OnClickListener = View.OnClickListener {
+        val clickListenerOpen: View.OnClickListener = View.OnClickListener {
 
             if (hasCompleted) {
                 hasCompleted = false
                 if (!isOpen) {
-                    callback.clicked(position)
+                    callback.clickedItem(position)
                     holder.motionBase.transitionToEnd()
                 } else {
                     holder.motionBase.transitionToStart()
@@ -75,6 +85,7 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
             }
 
         }
+        var isToDelete = false;
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
@@ -86,16 +97,18 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-
                 isOpen = !isOpen
 
-                if(!isOpen) {
+                if (!isOpen) {
                     holder.textViewContent.maxLines = Integer.MAX_VALUE;
                 }
 
                 model.isOpen = isOpen
 
                 hasCompleted = true
+                if (isToDelete) {
+                    handleRemoveItem(holder, position)
+                }
             }
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
@@ -104,9 +117,45 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
 
         })
 
-        holder.rootView.setOnClickListener(clickListener)
-        holder.chevronBackground.setOnClickListener(clickListener)
+        holder.chevronBackground.setOnClickListener(clickListenerOpen)
 
+        val clickListenerDelete: View.OnClickListener = View.OnClickListener {
+            isToDelete = true
+
+            holder.motionBase.transitionToStart()
+        }
+
+        holder.imageButtonDeleteEntry.setOnClickListener(clickListenerDelete)
+
+    }
+
+    fun handleRemoveItem(holder: ListViewHolder, position: Int) {
+        val animation = AnimationUtils.loadAnimation(
+            context,
+            R.anim.item_animation_middle_right
+        )
+
+        animation.setAnimationListener(object : Animation.AnimationListener {
+
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+
+                postsList.removeAt(position)
+                notifyDataSetChanged()
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+        })
+
+        holder.rootView.startAnimation(animation)
+//        postsList.removeAt(position)
+//        notifyDataSetChanged()
     }
 
     override fun onViewDetachedFromWindow(holder: ListViewHolder) {
@@ -130,6 +179,9 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
         val chevronBackground: ImageButton =
             itemView.findViewById(R.id.imageButtonChevronBackground)
         val rootView: View = itemView
+
+        val imageButtonDeleteEntry: ImageButton = itemView.findViewById(R.id.imageButtonDeleteEntry)
+        val cardViewDeleteButton: CardView = itemView.findViewById(R.id.cardViewDeleteButton)
 
         fun clearAnimation() {
             rootView.clearAnimation()

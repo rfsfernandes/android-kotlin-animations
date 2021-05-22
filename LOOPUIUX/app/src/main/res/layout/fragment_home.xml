@@ -12,13 +12,13 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:clipToPadding="false"
+      android:layoutAnimation="@anim/recycler_view_layout_animation"
       android:paddingTop="20dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      tools:listitem="@layout/list_item"
-      />
+      tools:listitem="@layout/list_item" />
 
   <pt.rfernandes.loopuiux.ui.home.new_post.AddEntryMotionLayout
       android:id="@+id/add_entry_motion_layout"
