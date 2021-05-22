@@ -14,4 +14,6 @@
   <string name="choose_a_photo">Choose a photo</string>
     <string name="summary">Summary</string>
   <string name="title">Title</string>
+    <string name="url_not_valid">URL not valid. Try again please</string>
+  <string name="url_error_loading">Error uploading URL. Try again please</string>
 </resources>

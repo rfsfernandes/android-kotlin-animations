@@ -11,7 +11,14 @@ import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.constraintlayout.motion.widget.TransitionAdapter
 import androidx.core.content.ContextCompat.getSystemService
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeout
+import kotlin.coroutines.resume
 
 /**
  *   File Utils created at 5/19/21 00:23 for the project LOOP UI&UX
@@ -65,6 +72,8 @@ fun View.setScale(scale: Float) {
     this.scaleX = scale
     this.scaleY = scale
 }
+
+
 
 inline fun hideKeyboard(context:Context,view: View) {
     val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

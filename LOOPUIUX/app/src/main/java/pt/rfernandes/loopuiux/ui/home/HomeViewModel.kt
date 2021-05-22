@@ -3,7 +3,7 @@ package pt.rfernandes.loopuiux.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import pt.rfernandes.loopuiux.model.PostContent
+import pt.rfernandes.loopuiux.model.EntryContent
 
 class HomeViewModel : ViewModel() {
 
@@ -18,15 +18,21 @@ class HomeViewModel : ViewModel() {
         return "https://picsum.photos/id/${(1..200).random()}/500/100"
     }
 
-    private val _postsList = MutableLiveData<ArrayList<PostContent>>().apply {
-        val postList = ArrayList<PostContent>()
+    private val _postsList = MutableLiveData<ArrayList<EntryContent>>().apply {
+        val postList = ArrayList<EntryContent>()
 
         for (i in 1 until 10) {
-            postList.add(PostContent(getImage(), title, content))
+            postList.add(EntryContent(getImage(), title, content))
         }
 
         value = postList
     }
 
-    val postsList: LiveData<ArrayList<PostContent>> = _postsList
+    val postsList: LiveData<ArrayList<EntryContent>> = _postsList
+
+
+    private val _tempPostContent = MutableLiveData<EntryContent>()
+
+    val tempEntryContent: LiveData<EntryContent> = _tempPostContent
+
 }

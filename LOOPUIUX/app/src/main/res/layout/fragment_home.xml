@@ -19,7 +19,7 @@
       app:layout_constraintTop_toTopOf="parent"
       tools:listitem="@layout/list_item" />
 
-  <pt.rfernandes.loopuiux.ui.home.new_post.NewPostMotionLayout
+  <pt.rfernandes.loopuiux.ui.home.new_post.AddEntryMotionLayout
       android:id="@+id/add_entry_motion_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

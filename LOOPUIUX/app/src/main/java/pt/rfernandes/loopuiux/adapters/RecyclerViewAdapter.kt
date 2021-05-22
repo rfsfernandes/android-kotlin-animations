@@ -11,7 +11,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.model.PostContent
+import pt.rfernandes.loopuiux.model.EntryContent
 
 /**
  *   Class RecyclerViewAdapter created at 5/19/21 23:03 for the project LOOP UI&UX
@@ -19,7 +19,7 @@ import pt.rfernandes.loopuiux.model.PostContent
  */
 class RecyclerViewAdapter(private val context: Context, private val callback: CollapseCallback) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
-    private var postsList: List<PostContent> = ArrayList()
+    private var postsList: List<EntryContent> = ArrayList()
     private var mPosition: Int = -1
 
     override fun onCreateViewHolder(
@@ -112,7 +112,7 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
 
     }
 
-    fun refreshList(newList: ArrayList<PostContent>) {
+    fun refreshList(newList: ArrayList<EntryContent>) {
         postsList = newList
         notifyDataSetChanged()
     }

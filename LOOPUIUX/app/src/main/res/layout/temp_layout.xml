@@ -1,63 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp">
 
-    <include
-        layout="@layout/new_entry_upload_motion_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/black"
-        android:layout_marginTop="16dp"
-        app:boxBackgroundColor="@color/dirty_white"
-        app:boxStrokeColor="@color/red_700"
-        app:counterEnabled="true"
-        app:counterMaxLength="50"
-        app:counterOverflowTextColor="@color/red_700"
-        app:counterTextColor="@color/dirty_white"
-        app:hintTextColor="@color/black">
+        android:text="@string/choose_a_photo"
+        android:textColor="@color/dirty_white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="24dp"
+        tools:layout_conversion_absoluteWidth="126dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" />
 
-        <com.google.android.material.textfield.TextInputEditText
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewImageEntry"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:maxHeight="0dp"
+        android:visibility="visible"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        tools:layout_conversion_absoluteHeight="250dp"
+        tools:layout_conversion_absoluteWidth="395dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="40dp"
+        android:background="@mipmap/city">
+
+
+        <View
+            android:id="@+id/imageViewEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
-            android:inputType="textWebEditText|text"
-            android:maxLines="1"
-            android:textColor="@color/black"
-            android:textColorHighlight="@color/red_700" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:scaleType="centerCrop"
+            tools:layout_conversion_absoluteHeight="0dp"
+            tools:layout_conversion_absoluteWidth="395dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="40dp"
+            android:background="@mipmap/city"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/buttonUpload"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:textColorHint="@color/black"
-        app:boxBackgroundColor="@color/dirty_white"
-        app:boxStrokeColor="@color/red_700"
-        app:counterEnabled="true"
-        app:counterMaxLength="300"
-        app:counterOverflowTextColor="@color/red_700"
-        app:counterTextColor="@color/dirty_white"
-        app:hintTextColor="@color/black"
-        android:layout_marginBottom="@dimen/fab_size">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top"
-            android:hint="Summary"
-            android:imeOptions="actionSearch"
-            android:inputType="textMultiLine|textImeMultiLine"
-            android:lines="7"
-            android:textColor="@color/black"
-            android:textColorHighlight="@color/red_700" />
-    </com.google.android.material.textfield.TextInputLayout>
-</LinearLayout>
+        android:drawableStart="@drawable/ic_upload"
+        android:text="@string/upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewImageEntry"
+        tools:layout_conversion_absoluteHeight="121dp"
+        tools:layout_conversion_absoluteWidth="0dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="298dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

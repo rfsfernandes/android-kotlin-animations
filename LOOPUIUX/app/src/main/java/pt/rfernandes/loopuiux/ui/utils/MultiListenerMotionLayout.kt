@@ -97,12 +97,4 @@ open class MultiListenerMotionLayout constructor(context: Context, attrs: Attrib
     override fun removeTransitionListener(listener: TransitionListener): Boolean {
         return listeners.remove(listener)
     }
-
-    @Deprecated(message = "Use addTransitionListener instead", replaceWith = ReplaceWith(
-        "addTransitionListener(listener)",
-        "com.nikhilpanju.fabfilter.views.MultiListenerMotionLayout.addTransitionListener"
-    ))
-    override fun setTransitionListener(listener: TransitionListener) {
-        throw IllegalArgumentException("Use addTransitionListener instead")
-    }
 }
