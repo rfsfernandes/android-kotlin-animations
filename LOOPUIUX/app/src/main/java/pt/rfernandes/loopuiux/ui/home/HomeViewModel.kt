@@ -18,21 +18,25 @@ class HomeViewModel : ViewModel() {
         return "https://picsum.photos/id/${(1..200).random()}/500/100"
     }
 
-    private val _postsList = MutableLiveData<ArrayList<EntryContent>>().apply {
-        val postList = ArrayList<EntryContent>()
+    private val _entryList = MutableLiveData<ArrayList<EntryContent>>().apply {
+        val arrayList = ArrayList<EntryContent>()
 
         for (i in 1 until 10) {
-            postList.add(EntryContent(getImage(), title, content))
+            val tempEntry = EntryContent(getImage(), title, content)
+            tempEntry.hasBeenLoaded = true
+            arrayList.add(tempEntry)
         }
 
-        value = postList
+        value = arrayList
     }
 
-    val postsList: LiveData<ArrayList<EntryContent>> = _postsList
+    val entryListLiveData: LiveData<ArrayList<EntryContent>> = _entryList
 
 
-    private val _tempPostContent = MutableLiveData<EntryContent>()
+    fun addEntry(newPost: EntryContent) {
 
-    val tempEntryContent: LiveData<EntryContent> = _tempPostContent
+        entryListLiveData.value?.add(newPost)
+
+    }
 
 }

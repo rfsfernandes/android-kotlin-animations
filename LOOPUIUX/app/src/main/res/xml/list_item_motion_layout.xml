@@ -27,13 +27,11 @@
             android:id="@+id/textViewContent"
             motion:layout_constraintEnd_toEndOf="@+id/textViewContentTitle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             motion:layout_constraintStart_toStartOf="@+id/textViewContentTitle"
             motion:layout_constraintTop_toBottomOf="@+id/textViewContentTitle"
             android:layout_marginTop="16dp"
-            motion:transitionEasing="linear">
-            <CustomAttribute
-                motion:attributeName="maxLines" />
+            motion:transitionEasing="cubic(1,0,1,0.28)">
             <CustomAttribute
                 motion:attributeName="textColor"
                 motion:customColorValue="@color/dirty_white" />
@@ -56,7 +54,8 @@
             motion:layout_constraintBottom_toTopOf="@+id/imageButtonChevronBackground"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            motion:layout_constraintTop_toTopOf="@+id/imageButtonChevronBackground">
+            motion:layout_constraintTop_toTopOf="@+id/imageButtonChevronBackground"
+            motion:transitionEasing="cubic(0.85,0.23,1,0.63)">
             <CustomAttribute
                 motion:attributeName="textColor"
                 motion:customColorValue="@color/dirty_white" />
@@ -68,13 +67,14 @@
             android:id="@+id/cardView"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="0dp"
             motion:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             motion:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            motion:layout_constraintBottom_toBottomOf="@+id/textViewContent" />
         <Constraint
             android:id="@+id/imageView2"
             motion:layout_constraintEnd_toEndOf="@+id/cardView"
@@ -106,7 +106,7 @@
                 motion:customFloatValue="0" />
         </Constraint>
         <Constraint
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             motion:layout_constraintStart_toStartOf="@+id/cardView"
             motion:layout_constraintEnd_toEndOf="@+id/cardView"
             android:layout_width="0dp"
@@ -115,12 +115,10 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            motion:transitionEasing="linear"
+            motion:transitionEasing="cubic(0.72,0.27,1,0)"
             motion:pathMotionArc="startVertical"
             motion:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="16dp">
-            <CustomAttribute
-                motion:attributeName="maxLines" />
             <CustomAttribute
                 motion:attributeName="textColor"
                 motion:customColorValue="@color/black" />

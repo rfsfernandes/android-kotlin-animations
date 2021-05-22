@@ -4,12 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.facebook.drawee.view.SimpleDraweeView
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.model.EntryContent
 
@@ -34,11 +36,28 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
 
         val model = postsList[position]
 
+        if (!model.hasBeenLoaded) {
+            holder.rootView.startAnimation(
+                AnimationUtils.loadAnimation(
+                    context,
+                    R.anim.item_animation_left_right
+                )
+            )
+            model.hasBeenLoaded = true
+        } else if(!model.alreadySeen) {
+            holder.rootView.startAnimation(
+                AnimationUtils.loadAnimation(
+                    context,
+                    R.anim.item_animation_fall_down
+                )
+            )
+        }
+        model.alreadySeen = true
         holder.textViewContentTitle.text = model.title
 
         holder.textViewContent.text = model.content
 
-        Glide.with(context).load(model.image).into(holder.imageViewContent)
+        holder.imageViewContent.setImageURI(model.image)
 
         var isOpen = model.isOpen
         var hasCompleted = true
@@ -59,8 +78,7 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-                if (isOpen && !hasCompleted)
-                    holder.textViewContent.maxLines = 2
+
             }
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
@@ -69,12 +87,11 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
 
-                if (isOpen)
-                    holder.textViewContent.maxLines = 2
-                else
-                    holder.textViewContent.maxLines = 100
-
                 isOpen = !isOpen
+
+                if(!isOpen) {
+                    holder.textViewContent.maxLines = Integer.MAX_VALUE;
+                }
 
                 model.isOpen = isOpen
 
@@ -92,6 +109,10 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
 
     }
 
+    override fun onViewDetachedFromWindow(holder: ListViewHolder) {
+        holder.clearAnimation()
+    }
+
     override fun getItemCount(): Int {
         return postsList.size
     }
@@ -102,7 +123,7 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
     }
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageViewContent: ImageView = itemView.findViewById(R.id.imageViewContent)
+        val imageViewContent: SimpleDraweeView = itemView.findViewById(R.id.imageViewContent)
         val textViewContentTitle: TextView = itemView.findViewById(R.id.textViewContentTitle)
         val textViewContent: TextView = itemView.findViewById(R.id.textViewContent)
         val motionBase: MotionLayout = itemView.findViewById(R.id.motion_base)
@@ -110,6 +131,9 @@ class RecyclerViewAdapter(private val context: Context, private val callback: Co
             itemView.findViewById(R.id.imageButtonChevronBackground)
         val rootView: View = itemView
 
+        fun clearAnimation() {
+            rootView.clearAnimation()
+        }
     }
 
     fun refreshList(newList: ArrayList<EntryContent>) {

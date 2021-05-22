@@ -15,6 +15,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
@@ -51,29 +52,32 @@ class HomeFragment : Fragment(), CollapseCallback {
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+        initVariables()
+        return view
+    }
 
+    private fun initVariables() {
         addEntryMotionLayout =
             binding.root.findViewById(R.id.add_entry_motion_layout)
-
         buttonUpload = binding.root.findViewById(R.id.buttonUpload)
-
         textInputLayoutTitle = binding.root.findViewById(R.id.textInputLayoutTitle)
         textInputLayoutContent = binding.root.findViewById(R.id.textInputLayoutContent)
 
-        val view = binding.root
         recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this)
-        return view
+        binding.recyclerView.adapter = recyclerViewAdapter
+        
+        val lm = LinearLayoutManager(context)
+        lm.reverseLayout = true
+        lm.stackFromEnd = true
+        binding.recyclerView.layoutManager = lm
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
 
-        binding.recyclerView.adapter = recyclerViewAdapter
-        val lm = LinearLayoutManager(context)
-        lm.reverseLayout = true
-        lm.stackFromEnd = true
-        binding.recyclerView.layoutManager = lm
+
 
         buttonUpload.setOnClickListener {
             openGalleryForImage()
@@ -84,8 +88,6 @@ class HomeFragment : Fragment(), CollapseCallback {
                 if (validateForm()) {
                     newEntry = true
                     newEntryUploadMotionLayout.transitionToState(R.id.upload_to_end)
-                    textInputLayoutContent.editText?.setText("")
-                    textInputLayoutTitle.editText?.setText("")
                     addEntryIsOpen = false
                 }
             } else {
@@ -95,7 +97,11 @@ class HomeFragment : Fragment(), CollapseCallback {
         }
 
         binding.root.findViewById<ImageView>(R.id.closeIcon).setOnClickListener {
-            newEntryUploadMotionLayout.transitionToState(R.id.upload_to_end)
+            if (imageURI.isEmpty()) {
+                addEntryMotionLayout.closeSheet()
+            } else {
+                newEntryUploadMotionLayout.transitionToState(R.id.upload_to_end)
+            }
             addEntryIsOpen = false
         }
 
@@ -104,10 +110,10 @@ class HomeFragment : Fragment(), CollapseCallback {
     }
 
     private fun validateForm(): Boolean {
-        return (!imageURI.isEmpty() &&
-                (!textInputLayoutContent.editText?.text.toString().isEmpty() &&
+        return (imageURI.isNotEmpty() &&
+                (textInputLayoutContent.editText?.text.toString().isNotEmpty() &&
                         textInputLayoutContent.editText?.text?.length!! <= textInputLayoutContent.counterMaxLength)
-                && (!textInputLayoutTitle.editText?.text.toString().isEmpty() &&
+                && (textInputLayoutTitle.editText?.text.toString().isNotEmpty() &&
                 textInputLayoutTitle.editText?.text?.length!! <= textInputLayoutTitle.counterMaxLength))
     }
 
@@ -127,19 +133,14 @@ class HomeFragment : Fragment(), CollapseCallback {
                 if (p1 == R.id.upload_to_start) {
                     removeImage()
                 } else if (p1 == R.id.upload_to_end) {
-                    removeImage()
-                    addEntryMotionLayout.closeSheet()
-                    if(newEntry) {
-                        (binding.recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(recyclerViewAdapter.itemCount, 0)
 
-                        val tempEntryContent = EntryContent(
-                            imageURI,
-                            textInputLayoutTitle.editText?.text.toString(),
-                            textInputLayoutContent.editText?.text.toString()
-                        )
+                    if (newEntry) {
 
-                        homeViewModel.postsList.value?.add(tempEntryContent)
-                        newEntry = false
+                        handleNewEntry()
+
+                    } else {
+                        removeImage()
+                        addEntryMotionLayout.closeSheet()
                     }
                 }
             }
@@ -153,11 +154,45 @@ class HomeFragment : Fragment(), CollapseCallback {
             }
 
         })
-        
 
         imageButtonRemoveImage.setOnClickListener {
             newEntryUploadMotionLayout.transitionToState(R.id.upload_to_start)
         }
+    }
+
+    private fun handleNewEntry() {
+        binding.recyclerView.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(
+                recyclerView: RecyclerView,
+                newState: Int
+            ) {
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_SETTLING -> {
+                        val tempEntryContent = EntryContent(
+                            imageURI,
+                            textInputLayoutTitle.editText?.text.toString(),
+                            textInputLayoutContent.editText?.text.toString()
+                        )
+                        removeImage()
+                        textInputLayoutContent.editText?.setText("")
+                        textInputLayoutTitle.editText?.setText("")
+                        homeViewModel.addEntry(tempEntryContent)
+                        recyclerViewAdapter.notifyDataSetChanged()
+
+                        newEntry = false
+                        binding.recyclerView.clearOnScrollListeners()
+                    }
+                }
+            }
+        })
+        addEntryMotionLayout.closeSheet()
+        Handler(Looper.getMainLooper()).postDelayed(
+            {
+                (binding.recyclerView.smoothScrollToPosition(recyclerViewAdapter.itemCount))
+            }, 1000
+        )
+
     }
 
     private fun removeImage() {
@@ -173,10 +208,11 @@ class HomeFragment : Fragment(), CollapseCallback {
     }
 
     private fun initViewModel() {
-        homeViewModel.postsList.observe(viewLifecycleOwner) { postList ->
+        homeViewModel.entryListLiveData.observe(viewLifecycleOwner) { postList ->
             mEntryList = postList
-            recyclerViewAdapter.refreshList(postList)
-            binding.recyclerView.adapter = recyclerViewAdapter
+
+            recyclerViewAdapter.refreshList(mEntryList)
+
         }
 
     }

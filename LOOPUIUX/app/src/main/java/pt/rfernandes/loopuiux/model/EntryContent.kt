@@ -6,4 +6,6 @@ package pt.rfernandes.loopuiux.model
  */
 class EntryContent(val image: String, val title: String, val content: String) {
     var isOpen: Boolean = false
+    var hasBeenLoaded: Boolean = false
+    var alreadySeen: Boolean = false
 }

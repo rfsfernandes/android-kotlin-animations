@@ -17,7 +17,8 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      tools:listitem="@layout/list_item" />
+      tools:listitem="@layout/list_item"
+      />
 
   <pt.rfernandes.loopuiux.ui.home.new_post.AddEntryMotionLayout
       android:id="@+id/add_entry_motion_layout"
