@@ -13,7 +13,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.model.EntryContent
+import pt.rfernandes.loopuiux.model.TravelEntry
 
 
 /**
@@ -26,7 +26,7 @@ class RecyclerViewAdapter(
     private val recyclerView: RecyclerView
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
-    private var postsList: ArrayList<EntryContent> = ArrayList()
+    private var travelEntryList: ArrayList<TravelEntry> = ArrayList()
     private var mPosition: Int = -1
 
     override fun onCreateViewHolder(
@@ -39,16 +39,17 @@ class RecyclerViewAdapter(
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         mPosition = position
 
-        val model = postsList[position]
+        val model = travelEntryList[position]
 
-        if (!model.hasBeenLoaded) {
+        if (model.isNewEntry) {
+            model.isNewEntry = false
+            callback.updateNewEntry(model)
             holder.rootView.startAnimation(
                 AnimationUtils.loadAnimation(
                     context,
                     R.anim.item_animation_left_right
                 )
             )
-            model.hasBeenLoaded = true
         } else if (!model.alreadySeen) {
             holder.rootView.startAnimation(
                 AnimationUtils.loadAnimation(
@@ -166,8 +167,8 @@ class RecyclerViewAdapter(
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-
-                postsList.removeAt(position)
+                callback.deletedItem(travelEntryList[position])
+                travelEntryList.removeAt(position)
                 notifyDataSetChanged()
             }
 
@@ -178,8 +179,6 @@ class RecyclerViewAdapter(
         })
 
         holder.rootView.startAnimation(animation)
-//        postsList.removeAt(position)
-//        notifyDataSetChanged()
     }
 
     override fun onViewDetachedFromWindow(holder: ListViewHolder) {
@@ -187,7 +186,7 @@ class RecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return postsList.size
+        return travelEntryList.size
     }
 
     fun collapseMotionLayout(holder: ListViewHolder) {
@@ -212,8 +211,8 @@ class RecyclerViewAdapter(
         }
     }
 
-    fun refreshList(newList: ArrayList<EntryContent>) {
-        postsList = newList
+    fun refreshList(newList: ArrayList<TravelEntry>) {
+        travelEntryList = newList
         notifyDataSetChanged()
     }
 }

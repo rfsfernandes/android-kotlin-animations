@@ -1,11 +1,11 @@
 package pt.rfernandes.loopuiux.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import pt.rfernandes.loopuiux.model.EntryContent
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
+import pt.rfernandes.loopuiux.data.DataRepository
+import pt.rfernandes.loopuiux.model.TravelEntry
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val repository: DataRepository) : ViewModel() {
 
     private val content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis ex vitae sagittis viverra. Morbi convallis, mi sed placerat auctor, quam risus faucibus ligula, at maximus ligula massa nec lectus. Pellentesque a dapibus risus. Sed tristique malesuada maximus. Duis id nisi vitae neque porttitor porttitor pulvinar et lectus. Praesent id augue sit amet quam semper ullamcorper. Etiam dignissim tortor erat, ac interdum tellus lacinia at. Pellentesque laoreet egestas nisi. In euismod ligula eu risus commodo tincidunt. Mauris facilisis ex ut magna finibus, id tempus magna congue.\n" +
             "\n" +
@@ -14,29 +14,28 @@ class HomeViewModel : ViewModel() {
 
     private val title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
 
-    private fun getImage() : String {
-        return "https://picsum.photos/id/${(1..200).random()}/500/100"
+    val travelEntries: LiveData<List<TravelEntry>> = repository.getTravelEntries.asLiveData()
+
+    fun insertEntry(travelEntry: TravelEntry) = viewModelScope.launch {
+        repository.insert(travelEntry)
     }
 
-    private val _entryList = MutableLiveData<ArrayList<EntryContent>>().apply {
-        val arrayList = ArrayList<EntryContent>()
+    fun deleteEntry(travelEntry: TravelEntry) = viewModelScope.launch {
+        repository.delete(travelEntry)
+    }
 
-        for (i in 1 until 10) {
-            val tempEntry = EntryContent(getImage(), title, content)
-            tempEntry.hasBeenLoaded = true
-            arrayList.add(tempEntry)
+    fun updateNewEntry(travelEntry: TravelEntry) = viewModelScope.launch {
+        repository.updateNewEntry(travelEntry)
+    }
+
+}
+
+class HomeViewModelFactory(private val repository: DataRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeViewModel(repository) as T
         }
-
-        value = arrayList
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
-
-    val entryListLiveData: LiveData<ArrayList<EntryContent>> = _entryList
-
-
-    fun addEntry(newPost: EntryContent) {
-
-        entryListLiveData.value?.add(newPost)
-
-    }
-
 }

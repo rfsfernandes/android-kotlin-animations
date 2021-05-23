@@ -13,44 +13,49 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.adapters.RecyclerViewCallback
 import pt.rfernandes.loopuiux.adapters.RecyclerViewAdapter
+import pt.rfernandes.loopuiux.adapters.RecyclerViewCallback
 import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding
-import pt.rfernandes.loopuiux.model.EntryContent
-import pt.rfernandes.loopuiux.ui.home.new_post.AddEntryMotionLayout
+import pt.rfernandes.loopuiux.model.TravelEntry
+import pt.rfernandes.loopuiux.myapp.MyApplication
+import pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
 
 
 class HomeFragment : Fragment(), RecyclerViewCallback {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
-    private val REQUEST_CODE = 234
-    private var addEntryIsOpen = false
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    private lateinit var mEntryList: ArrayList<EntryContent>
     private lateinit var addEntryMotionLayout: AddEntryMotionLayout
     private lateinit var buttonUpload: Button
     private lateinit var newEntryUploadMotionLayout: MotionLayout
-
     private lateinit var textInputLayoutTitle: TextInputLayout
     private lateinit var textInputLayoutContent: TextInputLayout
-    private var newEntry = false
 
+    private val homeViewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory((activity?.application as MyApplication).repository)
+    }
+    private val binding get() = _binding!!
+    private val REQUEST_CODE = 234
+
+    private var addEntryIsOpen = false
+    private var mTravelEntryList: ArrayList<TravelEntry> = arrayListOf()
+    private var _binding: FragmentHomeBinding? = null
+    private var newEntry = false
     private var imageURI: String = ""
+    private var wasDeleted = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
         initVariables()
@@ -107,6 +112,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         handleImageButtonRemove()
 
     }
+
 
     private fun validateForm(): Boolean {
         return (imageURI.isNotEmpty() &&
@@ -168,19 +174,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
             ) {
                 when (newState) {
                     RecyclerView.SCROLL_STATE_SETTLING -> {
-                        val tempEntryContent = EntryContent(
-                            imageURI,
-                            textInputLayoutTitle.editText?.text.toString(),
-                            textInputLayoutContent.editText?.text.toString()
-                        )
-                        removeImage()
-                        textInputLayoutContent.editText?.setText("")
-                        textInputLayoutTitle.editText?.setText("")
-                        homeViewModel.addEntry(tempEntryContent)
-                        recyclerViewAdapter.notifyDataSetChanged()
-
-                        newEntry = false
-                        binding.recyclerView.clearOnScrollListeners()
+                        addNewEntry()
                     }
                 }
             }
@@ -188,10 +182,25 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         addEntryMotionLayout.closeSheet()
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                (binding.recyclerView.smoothScrollToPosition(recyclerViewAdapter.itemCount))
+                if(recyclerViewAdapter.itemCount == 0) addNewEntry()
+                else (binding.recyclerView.smoothScrollToPosition(recyclerViewAdapter.itemCount))
             }, 1000
         )
-
+    }
+    private fun addNewEntry() {
+        val tempEntryContent = TravelEntry(
+            0,
+            imageURI,
+            textInputLayoutTitle.editText?.text.toString(),
+            textInputLayoutContent.editText?.text.toString(),
+        )
+        removeImage()
+        textInputLayoutContent.editText?.setText("")
+        textInputLayoutTitle.editText?.setText("")
+        mTravelEntryList.add(tempEntryContent)
+        homeViewModel.insertEntry(tempEntryContent)
+        binding.recyclerView.clearOnScrollListeners()
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     private fun removeImage() {
@@ -207,31 +216,45 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     }
 
     private fun initViewModel() {
-        homeViewModel.entryListLiveData.observe(viewLifecycleOwner) { postList ->
-            mEntryList = postList
+        homeViewModel.travelEntries.observe(viewLifecycleOwner, Observer { entries ->
+            entries?.let {
 
-            recyclerViewAdapter.refreshList(mEntryList)
+                if (!wasDeleted && !newEntry) {
+                    mTravelEntryList = ArrayList(it)
+                    recyclerViewAdapter.refreshList(mTravelEntryList)
+                } else {
+                    wasDeleted = !wasDeleted
+                    newEntry = !newEntry
+                }
 
-        }
+            }
+        })
 
     }
 
     override fun clickedItem(position: Int) {
-        for (index in mEntryList.indices) {
-            if (index != position && mEntryList[index].isOpen) {
-                mEntryList[index].isOpen = false
+        for (index in mTravelEntryList.indices) {
+            if (index != position && mTravelEntryList[index].isOpen) {
+                mTravelEntryList[index].isOpen = false
                 val holder =
                     binding.recyclerView.findViewHolderForAdapterPosition(index) as? RecyclerViewAdapter.ListViewHolder
 
                 if (holder != null) {
                     recyclerViewAdapter.collapseMotionLayout(holder)
                 }
-
                 break
             }
         }
+    }
 
+    override fun deletedItem(travelEntry: TravelEntry) {
+        wasDeleted = true
+        homeViewModel.deleteEntry(travelEntry)
+    }
 
+    override fun updateNewEntry(travelEntry: TravelEntry) {
+        newEntry = true
+        homeViewModel.updateNewEntry(travelEntry)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

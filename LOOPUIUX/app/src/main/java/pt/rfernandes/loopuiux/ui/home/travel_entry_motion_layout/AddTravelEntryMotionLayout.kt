@@ -1,4 +1,4 @@
-package pt.rfernandes.loopuiux.ui.home.new_post
+package pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout
 
 
 import android.content.Context
