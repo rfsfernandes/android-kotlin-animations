@@ -6,24 +6,66 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment"
     android:background="@color/dark_gray">
-
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/recyclerView"
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:id="@+id/coordinator_layout"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:clipToPadding="false"
-      android:paddingTop="20dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:listitem="@layout/list_item" />
+      android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
-  <pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
-      android:id="@+id/add_entry_motion_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:visibility="visible"
-      app:layoutDescription="@xml/scene_filter" />
+      <FrameLayout
+          android:id="@+id/appbar_container"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize">
+
+        <ImageView
+            android:id="@+id/drawer_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="16dp"
+            app:tint="@color/dirty_white"
+            app:srcCompat="@drawable/ic_drawer_icon" />
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:fontFamily="@font/koho_semi_bold"
+            android:textSize="18sp"/>
+
+      </FrameLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/list_item" />
+
+    <pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
+        android:id="@+id/add_entry_motion_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:layoutDescription="@xml/scene_filter" />
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

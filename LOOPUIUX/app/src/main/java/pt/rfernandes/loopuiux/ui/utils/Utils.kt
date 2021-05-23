@@ -24,18 +24,3 @@ import kotlin.coroutines.resume
  *   File Utils created at 5/19/21 00:23 for the project LOOP UI&UX
  *   By: rodrigofernandes
  */
-
-inline fun getValueAnimator(
-    forward: Boolean = true,
-    duration: Long,
-    interpolator: TimeInterpolator,
-    crossinline updateListener: (progress: Float) -> Unit
-): ValueAnimator {
-    val a =
-        if (forward) ValueAnimator.ofFloat(0f, 1.5f)
-        else ValueAnimator.ofFloat(1.5f, 0f)
-    a.addUpdateListener { updateListener(it.animatedValue as Float) }
-    a.duration = duration
-    a.interpolator = interpolator
-    return a
-}

@@ -95,11 +95,11 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
                     newEntry = true
                     newEntryUploadMotionLayout.transitionToState(R.id.upload_to_end)
                     addEntryIsOpen = false
-
                 }
             } else {
                 addEntryMotionLayout.openSheet()
                 addEntryIsOpen = true
+
             }
             (binding.recyclerView.layoutManager as CustomLayoutManager).setScrollEnabled(!addEntryIsOpen)
         }
