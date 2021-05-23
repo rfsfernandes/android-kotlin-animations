@@ -27,8 +27,8 @@
             android:layout_height="55dp"
             motion:layout_constraintStart_toStartOf="@+id/textViewContentTitle"
             motion:layout_constraintTop_toBottomOf="@+id/textViewContentTitle"
-            android:layout_marginTop="16dp"
-            motion:transitionEasing="cubic(1,0,1,0.28)">
+            motion:transitionEasing="cubic(1,0,1,0.28)"
+            android:layout_marginTop="0dp">
             <CustomAttribute
                 motion:attributeName="textColor"
                 motion:customColorValue="@color/dirty_white" />

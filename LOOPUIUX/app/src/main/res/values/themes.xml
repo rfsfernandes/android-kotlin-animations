@@ -7,10 +7,11 @@
     <item name="colorOnPrimary">@color/white</item>
     <!-- Secondary brand color. -->
     <item name="colorSecondary">@color/dark_gray</item>
-    <item name="colorSecondaryVariant">#97ABB3</item>
+    <item name="colorSecondaryVariant">@color/secondary_variant</item>
     <item name="colorOnSecondary">@color/black</item>
     <!-- Status bar color. -->
     <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    <item name="fontFamily">@font/koho_regular</item>
     <!-- Customize your theme here. -->
   </style>
 
@@ -22,4 +23,15 @@
   <style name="Theme.LOOPUIUX.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
   <style name="Theme.LOOPUIUX.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+  <style name="title_style" parent="Widget.AppCompat.TextView">
+    <item name="fontFamily">@font/koho_semi_bold</item>
+    <item name="android:textSize">24sp</item>
+  </style>
+
+  <style name="content_style" parent="Widget.AppCompat.TextView">
+    <item name="fontFamily">@font/koho_regular</item>
+    <item name="android:textSize">18sp</item>
+  </style>
+
 </resources>
