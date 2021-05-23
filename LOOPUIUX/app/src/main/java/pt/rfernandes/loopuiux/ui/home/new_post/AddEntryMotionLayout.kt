@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.rfernandes.loopuiux.MainActivity
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.databinding.NewPostMotionLayoutBinding
+import pt.rfernandes.loopuiux.databinding.NewEntryMotionLayoutBinding
 import pt.rfernandes.loopuiux.ui.utils.MultiListenerMotionLayout
 
 var animationPlaybackSpeed: Double = 0.8
@@ -28,7 +28,7 @@ class AddEntryMotionLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : MultiListenerMotionLayout(context, attrs, defStyleAttr) {
 
-    private var _binding: NewPostMotionLayoutBinding? = null
+    private var _binding: NewEntryMotionLayoutBinding? = null
     private val binding get() = _binding!!
 
     var buttonIsOpened = false
@@ -39,9 +39,9 @@ class AddEntryMotionLayout @JvmOverloads constructor(
 
     init {
 
-        inflate(context, R.layout.new_post_motion_layout, this)
+        inflate(context, R.layout.new_entry_motion_layout, this)
         _binding =
-            NewPostMotionLayoutBinding.bind(rootView)
+            NewEntryMotionLayoutBinding.bind(rootView)
         updateDurations()
 
     }

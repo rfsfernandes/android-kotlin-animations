@@ -4,6 +4,7 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        android:id="@+id/start_to_end_list"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
         motion:duration="500"></Transition>
@@ -165,20 +166,16 @@
     </ConstraintSet>
 
     <Transition
+        android:id="@+id/start_to_delete_list"
         motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/delete_entry" >
-        <OnSwipe
-            motion:touchAnchorId="@+id/imageView2"
-            motion:dragDirection="dragRight"
-            motion:touchAnchorSide="middle" />
-    </Transition>
+        motion:constraintSetEnd="@+id/delete_entry" ></Transition>
     <Transition
+        android:id="@+id/delete_to_start_list"
         motion:constraintSetStart="@+id/delete_entry"
-        motion:constraintSetEnd="@+id/start" >
-        <OnSwipe
-            motion:touchAnchorId="@+id/imageView2"
-            motion:dragDirection="dragLeft"
-            motion:touchAnchorSide="middle" />
-    </Transition>
+        motion:constraintSetEnd="@+id/start" ></Transition>
+    <Transition
+        android:id="@+id/end_to_start_list"
+        motion:constraintSetStart="@+id/end"
+        motion:constraintSetEnd="@+id/start" ></Transition>
 
 </MotionScene>

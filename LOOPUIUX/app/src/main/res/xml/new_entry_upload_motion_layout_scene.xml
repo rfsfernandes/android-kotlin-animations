@@ -54,7 +54,7 @@
         android:id="@+id/start_to_upload"
         motion:constraintSetStart="@+id/start"
         motion:constraintSetEnd="@+id/upload"
-        motion:duration="700"/>
+        motion:duration="300"/>
     <Transition
         android:id="@+id/upload_to_start"
         motion:constraintSetStart="@+id/upload"

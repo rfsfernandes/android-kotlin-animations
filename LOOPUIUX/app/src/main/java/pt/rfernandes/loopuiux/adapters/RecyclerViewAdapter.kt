@@ -1,24 +1,19 @@
 package pt.rfernandes.loopuiux.adapters
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.model.EntryContent
-import pt.rfernandes.loopuiux.ui.utils.getValueAnimator
 
 
 /**
@@ -69,23 +64,45 @@ class RecyclerViewAdapter(
 
         holder.imageViewContent.setImageURI(model.image)
 
-        var isOpen = model.isOpen
+        var isDetailsOpen = model.isOpen
+        var isDeleteOpen = false
         var hasCompleted = true
-
-        val clickListenerOpen: View.OnClickListener = View.OnClickListener {
-
-            if (hasCompleted) {
-                hasCompleted = false
-                if (!isOpen) {
-                    callback.clickedItem(position)
-                    holder.motionBase.transitionToEnd()
-                } else {
-                    holder.motionBase.transitionToStart()
+        var isToOpenDetails = false
+        var isToOpenDelete = false
+        val clickListenerOpen: View.OnClickListener = View.OnClickListener { v ->
+            if (!isDeleteOpen) {
+                holder.motionBase.setTransition(R.id.start_to_end_list)
+                isToOpenDetails = true
+                isToOpenDelete = false
+                if (hasCompleted) {
+                    hasCompleted = false
+                    if (!isDetailsOpen) {
+                        callback.clickedItem(position)
+                        holder.motionBase.transitionToEnd()
+                    } else {
+                        holder.motionBase.transitionToStart()
+                    }
                 }
             }
-
+            v.clearFocus()
         }
         var isToDelete = false;
+
+        holder.cardViewImage.setOnClickListener { v ->
+            if (!isDetailsOpen) {
+                holder.motionBase.setTransition(R.id.start_to_delete_list)
+                isToOpenDetails = false
+                isToOpenDelete = true
+                if (hasCompleted) {
+                    hasCompleted = false
+                    if (!isDeleteOpen)
+                        holder.motionBase.transitionToEnd()
+                    else
+                        holder.motionBase.transitionToStart()
+                }
+            }
+            v.clearFocus()
+        }
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
@@ -97,13 +114,20 @@ class RecyclerViewAdapter(
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                isOpen = !isOpen
+                if (isToOpenDetails) {
+                    isDetailsOpen = !isDetailsOpen
 
-                if (!isOpen) {
-                    holder.textViewContent.maxLines = Integer.MAX_VALUE;
+                    if (!isDetailsOpen) {
+                        holder.textViewContent.maxLines = Integer.MAX_VALUE;
+                    }
+
+                    model.isOpen = isDetailsOpen
+                    isToOpenDetails = false
                 }
 
-                model.isOpen = isOpen
+                if (isToOpenDelete) {
+                    isDeleteOpen = !isDeleteOpen
+                }
 
                 hasCompleted = true
                 if (isToDelete) {
@@ -176,12 +200,12 @@ class RecyclerViewAdapter(
         val textViewContentTitle: TextView = itemView.findViewById(R.id.textViewContentTitle)
         val textViewContent: TextView = itemView.findViewById(R.id.textViewContent)
         val motionBase: MotionLayout = itemView.findViewById(R.id.motion_base)
+        val cardViewImage: CardView = itemView.findViewById(R.id.imageView2)
         val chevronBackground: ImageButton =
             itemView.findViewById(R.id.imageButtonChevronBackground)
         val rootView: View = itemView
 
         val imageButtonDeleteEntry: ImageButton = itemView.findViewById(R.id.imageButtonDeleteEntry)
-        val cardViewDeleteButton: CardView = itemView.findViewById(R.id.cardViewDeleteButton)
 
         fun clearAnimation() {
             rootView.clearAnimation()
