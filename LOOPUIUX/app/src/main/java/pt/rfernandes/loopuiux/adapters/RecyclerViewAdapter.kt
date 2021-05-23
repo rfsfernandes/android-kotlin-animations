@@ -1,8 +1,12 @@
 package pt.rfernandes.loopuiux.adapters
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -23,11 +27,10 @@ import pt.rfernandes.loopuiux.model.TravelEntry
 class RecyclerViewAdapter(
     private val context: Context,
     private val callback: RecyclerViewCallback,
-    private val recyclerView: RecyclerView
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
     private var travelEntryList: ArrayList<TravelEntry> = ArrayList()
-    private var mPosition: Int = -1
+    private val imageNames: Array<Int> = arrayOf(R.mipmap.building, R.mipmap.mountain, R.mipmap.sky, R.mipmap.city, R.mipmap.mountain_view)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,7 +40,6 @@ class RecyclerViewAdapter(
     )
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        mPosition = position
 
         val model = travelEntryList[position]
 
@@ -51,19 +53,29 @@ class RecyclerViewAdapter(
                 )
             )
         } else if (!model.alreadySeen) {
-            holder.rootView.startAnimation(
-                AnimationUtils.loadAnimation(
-                    context,
-                    R.anim.item_animation_fall_down
-                )
+            holder.rootView.visibility = INVISIBLE
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+
+                    holder.rootView.startAnimation(
+                        AnimationUtils.loadAnimation(
+                            context,
+                            R.anim.item_animation_fall_down
+                        )
+                    )
+                    holder.rootView.visibility = VISIBLE
+                }, (300 * ((position + 1) / 3)).toLong()
             )
+
         }
         model.alreadySeen = true
         holder.textViewContentTitle.text = model.title
 
         holder.textViewContent.text = model.content
-
-        holder.imageViewContent.setImageURI(model.image)
+        if (model.image.isEmpty())
+            holder.imageViewContent.setActualImageResource(imageNames[position])
+        else
+            holder.imageViewContent.setImageURI(model.image)
 
         var isDetailsOpen = model.isOpen
         var isDeleteOpen = false

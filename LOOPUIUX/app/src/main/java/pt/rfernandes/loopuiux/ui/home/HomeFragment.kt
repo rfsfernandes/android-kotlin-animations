@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -20,12 +21,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
+import pt.rfernandes.loopuiux.adapters.CustomLayoutManager
 import pt.rfernandes.loopuiux.adapters.RecyclerViewAdapter
 import pt.rfernandes.loopuiux.adapters.RecyclerViewCallback
 import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding
 import pt.rfernandes.loopuiux.model.TravelEntry
 import pt.rfernandes.loopuiux.myapp.MyApplication
 import pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment(), RecyclerViewCallback {
@@ -35,7 +39,6 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     private lateinit var newEntryUploadMotionLayout: MotionLayout
     private lateinit var textInputLayoutTitle: TextInputLayout
     private lateinit var textInputLayoutContent: TextInputLayout
-
     private val homeViewModel: HomeViewModel by viewModels {
         HomeViewModelFactory((activity?.application as MyApplication).repository)
     }
@@ -70,12 +73,11 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         textInputLayoutTitle = binding.root.findViewById(R.id.textInputLayoutTitle)
         textInputLayoutContent = binding.root.findViewById(R.id.textInputLayoutContent)
 
-        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this, binding.recyclerView)
+        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this)
         binding.recyclerView.adapter = recyclerViewAdapter
 
-        val lm = LinearLayoutManager(context)
-        lm.reverseLayout = true
-        lm.stackFromEnd = true
+        val lm = CustomLayoutManager(requireContext())
+
         binding.recyclerView.layoutManager = lm
     }
 
@@ -93,11 +95,13 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
                     newEntry = true
                     newEntryUploadMotionLayout.transitionToState(R.id.upload_to_end)
                     addEntryIsOpen = false
+
                 }
             } else {
                 addEntryMotionLayout.openSheet()
                 addEntryIsOpen = true
             }
+            (binding.recyclerView.layoutManager as CustomLayoutManager).setScrollEnabled(!addEntryIsOpen)
         }
 
         binding.root.findViewById<ImageView>(R.id.closeIcon).setOnClickListener {
@@ -107,6 +111,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
                 newEntryUploadMotionLayout.transitionToState(R.id.upload_to_end)
             }
             addEntryIsOpen = false
+            (binding.recyclerView.layoutManager as CustomLayoutManager).setScrollEnabled(!addEntryIsOpen)
         }
 
         handleImageButtonRemove()
@@ -197,7 +202,9 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         removeImage()
         textInputLayoutContent.editText?.setText("")
         textInputLayoutTitle.editText?.setText("")
+        mTravelEntryList.sortBy { it.id }
         mTravelEntryList.add(tempEntryContent)
+        mTravelEntryList.reverse()
         homeViewModel.insertEntry(tempEntryContent)
         binding.recyclerView.clearOnScrollListeners()
         recyclerViewAdapter.notifyDataSetChanged()

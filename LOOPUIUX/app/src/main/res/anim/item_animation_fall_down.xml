@@ -5,7 +5,7 @@
     <translate
         android:fromYDelta="-20%"
         android:toYDelta="0"
-        android:interpolator="@android:anim/decelerate_interpolator"
+        android:interpolator="@android:anim/overshoot_interpolator"
         />
 
     <alpha
@@ -23,5 +23,4 @@
         android:pivotY="50%"
         android:interpolator="@android:anim/decelerate_interpolator"
         />
-
 </set>

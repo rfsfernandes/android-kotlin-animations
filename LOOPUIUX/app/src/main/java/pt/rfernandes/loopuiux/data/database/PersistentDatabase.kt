@@ -15,14 +15,18 @@ import pt.rfernandes.loopuiux.model.TravelEntry
  */
 
 @Database(entities = [TravelEntry::class], version = 1, exportSchema = false)
-public abstract class PersistentDatabase : RoomDatabase() {
+abstract class PersistentDatabase : RoomDatabase() {
 
     abstract fun entryDao(): EntryDao
-
-    private class PersistentDatabaseCallback(
-        private val scope: CoroutineScope,
-        private var INSTANCE: PersistentDatabase?
+    class PersistentDatabaseCallback(
+        private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
+
+
+
+        private val titleArray: Array<String> = arrayOf("Title 1", "Title2" ,"Title3", "Title 4", "Title 5")
+
+        private val contentArray: Array<String> = arrayOf("Content 1", "Content 2", "Content 3", "Content 4", "Content 5")
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
@@ -33,11 +37,14 @@ public abstract class PersistentDatabase : RoomDatabase() {
             }
         }
 
-        suspend fun populateDatabase(wordDao: EntryDao) {
-            // Delete all content here.
-            wordDao.deleteAll()
+        private suspend fun populateDatabase(entryDao: EntryDao) {
 
-            // Add sample words.
+            entryDao.deleteAll()
+
+            for (i in titleArray.indices) {
+                val temp = TravelEntry(0, "", titleArray[i], contentArray[i])
+                entryDao.insertEntry(temp)
+            }
 
         }
     }
@@ -61,7 +68,7 @@ public abstract class PersistentDatabase : RoomDatabase() {
                     PersistentDatabase::class.java,
                     "entry_database"
                 )
-                    .addCallback(PersistentDatabaseCallback(scope, INSTANCE))
+                    .addCallback(PersistentDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 // return instance

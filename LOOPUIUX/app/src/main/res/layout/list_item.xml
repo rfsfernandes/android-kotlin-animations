@@ -15,11 +15,11 @@
         android:layout_marginStart="16dp"
         android:background="@android:color/transparent"
         android:elevation="3dp"
-        android:tint="@color/dirty_white"
         app:layout_constraintBottom_toBottomOf="@+id/cardViewDeleteButton"
         app:layout_constraintStart_toStartOf="@+id/cardViewDeleteButton"
         app:layout_constraintTop_toTopOf="@+id/cardViewDeleteButton"
-        app:srcCompat="@drawable/ic_trash" />
+        app:srcCompat="@drawable/ic_trash"
+        app:tint="@color/dirty_white" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewDeleteButton"
@@ -120,7 +120,7 @@
         android:background="@drawable/chevron_background"
         android:elevation="6dp"
         android:src="@drawable/ic_chevron_right"
-        android:tint="@color/red_700"
+        app:tint="@color/red_700"
         app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="@+id/cardView" />
