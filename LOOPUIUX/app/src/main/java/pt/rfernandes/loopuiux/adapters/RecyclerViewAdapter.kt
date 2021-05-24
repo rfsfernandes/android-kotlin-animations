@@ -1,12 +1,8 @@
 package pt.rfernandes.loopuiux.adapters
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -30,7 +26,7 @@ class RecyclerViewAdapter(
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
     private var travelEntryList: ArrayList<TravelEntry> = ArrayList()
-    private val imageNames: Array<Int> = arrayOf(R.mipmap.building, R.mipmap.mountain, R.mipmap.sky, R.mipmap.city, R.mipmap.mountain_view)
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,37 +39,22 @@ class RecyclerViewAdapter(
 
         val model = travelEntryList[position]
 
-        if (model.isNewEntry) {
-            model.isNewEntry = false
-            callback.updateNewEntry(model)
+        if (!model.alreadySeen) {
             holder.rootView.startAnimation(
                 AnimationUtils.loadAnimation(
                     context,
-                    R.anim.item_animation_left_right
+                    R.anim.item_animation_fall_down
                 )
             )
-        } else if (!model.alreadySeen) {
-            holder.rootView.visibility = INVISIBLE
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-
-                    holder.rootView.startAnimation(
-                        AnimationUtils.loadAnimation(
-                            context,
-                            R.anim.item_animation_fall_down
-                        )
-                    )
-                    holder.rootView.visibility = VISIBLE
-                }, (300 * ((position + 1) / 3)).toLong()
-            )
-
+            model.alreadySeen = true
         }
+
         model.alreadySeen = true
         holder.textViewContentTitle.text = model.title
 
         holder.textViewContent.text = model.content
-        if (model.image.isEmpty())
-            holder.imageViewContent.setActualImageResource(imageNames[position])
+        if (model.image.matches("-?\\d+(\\.\\d+)?".toRegex()))
+            holder.imageViewContent.setActualImageResource(model.image.toInt())
         else
             holder.imageViewContent.setImageURI(model.image)
 
@@ -99,7 +80,7 @@ class RecyclerViewAdapter(
             }
             v.clearFocus()
         }
-        var isToDelete = false;
+        var isToDelete = false
 
         holder.cardViewImage.setOnClickListener { v ->
             if (!isDetailsOpen) {
@@ -131,7 +112,7 @@ class RecyclerViewAdapter(
                     isDetailsOpen = !isDetailsOpen
 
                     if (!isDetailsOpen) {
-                        holder.textViewContent.maxLines = Integer.MAX_VALUE;
+                        holder.textViewContent.maxLines = Integer.MAX_VALUE
                     }
 
                     model.isOpen = isDetailsOpen

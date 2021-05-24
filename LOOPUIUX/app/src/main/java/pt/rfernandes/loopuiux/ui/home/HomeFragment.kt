@@ -1,23 +1,24 @@
 package pt.rfernandes.loopuiux.ui.home
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
@@ -28,6 +29,8 @@ import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding
 import pt.rfernandes.loopuiux.model.TravelEntry
 import pt.rfernandes.loopuiux.myapp.MyApplication
 import pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
+import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -50,7 +53,6 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     private var _binding: FragmentHomeBinding? = null
     private var newEntry = false
     private var imageURI: String = ""
-    private var wasDeleted = false
 
 
     override fun onCreateView(
@@ -66,7 +68,8 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     }
 
     private fun initVariables() {
-
+        newEntryUploadMotionLayout =
+            binding.root.findViewById(R.id.new_entry_upload_motion_layout)
         addEntryMotionLayout =
             binding.root.findViewById(R.id.add_entry_motion_layout)
         buttonUpload = binding.root.findViewById(R.id.buttonUpload)
@@ -130,8 +133,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     private fun handleImageButtonRemove() {
         val imageButtonRemoveImage =
             binding.root.findViewById<ImageButton>(R.id.imageButtonRemoveImage)
-        newEntryUploadMotionLayout =
-            binding.root.findViewById(R.id.new_entry_upload_motion_layout)
+
         newEntryUploadMotionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
             }
@@ -171,27 +173,17 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     }
 
     private fun handleNewEntry() {
-        binding.recyclerView.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(
-                recyclerView: RecyclerView,
-                newState: Int
-            ) {
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_SETTLING -> {
-                        addNewEntry()
-                    }
-                }
-            }
-        })
+
         addEntryMotionLayout.closeSheet()
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                if(recyclerViewAdapter.itemCount == 0) addNewEntry()
-                else (binding.recyclerView.smoothScrollToPosition(recyclerViewAdapter.itemCount))
+                (binding.recyclerView.smoothScrollToPosition(0))
+                addNewEntry()
+
             }, 1000
         )
     }
+
     private fun addNewEntry() {
         val tempEntryContent = TravelEntry(
             0,
@@ -226,13 +218,8 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         homeViewModel.travelEntries.observe(viewLifecycleOwner, Observer { entries ->
             entries?.let {
 
-                if (!wasDeleted && !newEntry) {
-                    mTravelEntryList = ArrayList(it)
-                    recyclerViewAdapter.refreshList(mTravelEntryList)
-                } else {
-                    wasDeleted = !wasDeleted
-                    newEntry = !newEntry
-                }
+                mTravelEntryList = ArrayList(it)
+                recyclerViewAdapter.refreshList(mTravelEntryList)
 
             }
         })
@@ -255,32 +242,76 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     }
 
     override fun deletedItem(travelEntry: TravelEntry) {
-        wasDeleted = true
         homeViewModel.deleteEntry(travelEntry)
-    }
-
-    override fun updateNewEntry(travelEntry: TravelEntry) {
-        newEntry = true
-        homeViewModel.updateNewEntry(travelEntry)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
 
-            binding.root.findViewById<SimpleDraweeView>(R.id.cardViewImageEntry)
-                .setImageURI(data?.data, requireContext()) // handle chosen image
+            try {
+                // Creating file
+                var photoFile: File? = null
+                try {
+                    photoFile = createImageFile()
+                } catch (ex: IOException) {
+                    Log.d(TAG, "Error occurred while creating the file")
+                }
+                val inputStream: InputStream? =
+                    requireActivity().contentResolver.openInputStream(data?.data!!)
+                val fileOutputStream = FileOutputStream(photoFile)
+                // Copying
+                copyStream(inputStream!!, fileOutputStream)
+
+                imageURI = photoFile?.toUri().toString()
+
+                binding.root.findViewById<SimpleDraweeView>(R.id.cardViewImageEntry)
+                    .setImageURI(photoFile?.toUri(), requireContext())
+
+                fileOutputStream.close()
+                inputStream.close()
+            } catch (e: Exception) {
+                Log.d("Error onactivityresult", "onActivityResult: $e")
+            }
+
+            // handle chosen image
 
             Handler(Looper.getMainLooper()).postDelayed(
                 {
-                    binding.addEntryMotionLayout.findViewById<MotionLayout>(R.id.new_entry_upload_motion_layout)
+                    newEntryUploadMotionLayout
                         .transitionToState(
                             R.id.upload
                         )
-                    imageURI = data?.data.toString()
                 }, 1000
             )
 
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File? {
+        // Create an image file name
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(
+            imageFileName,  /* prefix */
+            ".jpg",  /* suffix */
+            storageDir /* directory */
+        )
+
+        // Save a file: path for use with ACTION_VIEW intents
+        imageURI = image.absolutePath
+        return image
+    }
+
+    @Throws(IOException::class)
+    fun copyStream(input: InputStream, output: OutputStream) {
+        val buffer = ByteArray(1024)
+        var bytesRead: Int
+        while (input.read(buffer).also { bytesRead = it } != -1) {
+            output.write(buffer, 0, bytesRead)
         }
     }
 

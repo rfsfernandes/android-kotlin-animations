@@ -87,7 +87,6 @@ class AddEntryMotionLayout @JvmOverloads constructor(
     }
 
 
-
     private inline fun performAnimation(crossinline block: suspend () -> Unit) {
         (context as MainActivity).lifecycleScope.launch {
             block()

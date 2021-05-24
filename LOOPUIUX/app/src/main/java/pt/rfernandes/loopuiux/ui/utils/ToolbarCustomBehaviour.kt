@@ -38,21 +38,42 @@ class ToolbarCustomBehaviour : CoordinatorLayout.Behavior<AppBarLayout>() {
     /**
      * Consume if vertical scroll because we don't care about other scrolls
      */
-    override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout, child: AppBarLayout, directTargetChild: View,
-                                     target: View, axes: Int, type: Int): Boolean {
+    override fun onStartNestedScroll(
+        coordinatorLayout: CoordinatorLayout, child: AppBarLayout, directTargetChild: View,
+        target: View, axes: Int, type: Int
+    ): Boolean {
         getViews(child)
         return axes == ViewCompat.SCROLL_AXIS_VERTICAL ||
-                super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type)
+                super.onStartNestedScroll(
+                    coordinatorLayout,
+                    child,
+                    directTargetChild,
+                    target,
+                    axes,
+                    type
+                )
     }
 
 
     /**
      * Perform actual animation by determining the dY amount
      */
-    override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: AppBarLayout, target: View,
-                                dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
-                                type: Int, consumed: IntArray) {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
+    override fun onNestedScroll(
+        coordinatorLayout: CoordinatorLayout, child: AppBarLayout, target: View,
+        dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
+        type: Int, consumed: IntArray
+    ) {
+        super.onNestedScroll(
+            coordinatorLayout,
+            child,
+            target,
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            type,
+            consumed
+        )
         getViews(child)
 
         if (dyConsumed > 0) {
@@ -62,11 +83,13 @@ class ToolbarCustomBehaviour : CoordinatorLayout.Behavior<AppBarLayout>() {
 
                 //--- shrink toolbar
                 val height = toolbar.layoutParams.height - dyConsumed
-                toolbar.layoutParams.height = if (height < toolbarCollapsedHeight) toolbarCollapsedHeight.toInt() else height
+                toolbar.layoutParams.height =
+                    if (height < toolbarCollapsedHeight) toolbarCollapsedHeight.toInt() else height
                 toolbar.requestLayout()
 
                 //--- translate up drawer icon
-                var translate: Float = (toolbarOriginalHeight - toolbar.layoutParams.height) / (toolbarOriginalHeight - toolbarCollapsedHeight)
+                var translate: Float =
+                    (toolbarOriginalHeight - toolbar.layoutParams.height) / (toolbarOriginalHeight - toolbarCollapsedHeight)
                 translate *= toolbarOriginalHeight
                 drawerIcon.translationY = -translate
 
@@ -83,11 +106,13 @@ class ToolbarCustomBehaviour : CoordinatorLayout.Behavior<AppBarLayout>() {
                 //--- expand toolbar
                 // subtract because dyUnconsumed is < 0
                 val height = toolbar.layoutParams.height - dyUnconsumed
-                toolbar.layoutParams.height = if (height > toolbarOriginalHeight) toolbarOriginalHeight.toInt() else height
+                toolbar.layoutParams.height =
+                    if (height > toolbarOriginalHeight) toolbarOriginalHeight.toInt() else height
                 toolbar.requestLayout()
 
                 //--- translate down  drawer icon
-                var translate: Float = (toolbarOriginalHeight - toolbar.layoutParams.height) / (toolbarOriginalHeight - toolbarCollapsedHeight)
+                var translate: Float =
+                    (toolbarOriginalHeight - toolbar.layoutParams.height) / (toolbarOriginalHeight - toolbarCollapsedHeight)
                 translate *= toolbarOriginalHeight
                 drawerIcon.translationY = -translate
 

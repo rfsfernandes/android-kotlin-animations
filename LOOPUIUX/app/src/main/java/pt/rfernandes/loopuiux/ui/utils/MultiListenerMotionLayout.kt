@@ -15,14 +15,22 @@ import kotlin.coroutines.resume
  *   Class MultiListenerMotionLayout created at 5/20/21 19:00 for the project LOOP UI&UX
  *   By: rodrigofernandes
  */
-open class MultiListenerMotionLayout constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : MotionLayout(context, attrs, defStyleAttr) {
+open class MultiListenerMotionLayout constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : MotionLayout(context, attrs, defStyleAttr) {
 
     private val listeners = CopyOnWriteArrayList<TransitionListener>()
 
     init {
         super.setTransitionListener(object : TransitionListener {
-            override fun onTransitionTrigger(motionLayout: MotionLayout, triggerId: Int, positive: Boolean, progress: Float) {
+            override fun onTransitionTrigger(
+                motionLayout: MotionLayout,
+                triggerId: Int,
+                positive: Boolean,
+                progress: Float
+            ) {
                 listeners.forEach {
                     it.onTransitionTrigger(motionLayout, triggerId, positive, progress)
                 }
@@ -34,7 +42,12 @@ open class MultiListenerMotionLayout constructor(context: Context, attrs: Attrib
                 }
             }
 
-            override fun onTransitionChange(motionLayout: MotionLayout, startId: Int, endId: Int, progress: Float) {
+            override fun onTransitionChange(
+                motionLayout: MotionLayout,
+                startId: Int,
+                endId: Int,
+                progress: Float
+            ) {
                 listeners.forEach {
                     it.onTransitionChange(motionLayout, startId, endId, progress)
                 }
@@ -65,7 +78,10 @@ open class MultiListenerMotionLayout constructor(context: Context, attrs: Attrib
             withTimeout(timeout) {
                 suspendCancellableCoroutine<Unit> { continuation ->
                     val l = object : TransitionAdapter() {
-                        override fun onTransitionCompleted(motionLayout: MotionLayout, currentId: Int) {
+                        override fun onTransitionCompleted(
+                            motionLayout: MotionLayout,
+                            currentId: Int
+                        ) {
                             if (currentId == transitionId) {
                                 removeTransitionListener(this)
                                 continuation.resume(Unit)
@@ -85,8 +101,10 @@ open class MultiListenerMotionLayout constructor(context: Context, attrs: Attrib
             // Transition didn't happen in time. Remove our listener and throw a cancellation
             // exception to let the coroutine know
             listener?.let(::removeTransitionListener)
-            throw CancellationException("Transition to state with id: $transitionId did not" +
-                    " complete in timeout.", tex)
+            throw CancellationException(
+                "Transition to state with id: $transitionId did not" +
+                        " complete in timeout.", tex
+            )
         }
     }
 

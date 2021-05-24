@@ -11,7 +11,7 @@ import pt.rfernandes.loopuiux.model.TravelEntry
  */
 class DataRepository(private val entryDao: EntryDao) {
 
-    val getTravelEntries : Flow<List<TravelEntry>> = entryDao.getEntries()
+    val getTravelEntries: Flow<List<TravelEntry>> = entryDao.getEntries()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -22,11 +22,6 @@ class DataRepository(private val entryDao: EntryDao) {
     @WorkerThread
     suspend fun delete(entry: TravelEntry) {
         entryDao.deleteEntry(entry.id)
-    }
-
-    @WorkerThread
-    suspend fun updateNewEntry(entry: TravelEntry) {
-        entryDao.updateNewEntry(false, entry.id)
     }
 
 }

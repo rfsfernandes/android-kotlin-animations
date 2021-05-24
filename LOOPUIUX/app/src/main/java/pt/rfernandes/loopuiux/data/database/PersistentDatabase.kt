@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.model.TravelEntry
 
 /**
@@ -22,11 +23,19 @@ abstract class PersistentDatabase : RoomDatabase() {
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
 
+        private val imageNames: Array<Int> = arrayOf(
+            R.mipmap.building,
+            R.mipmap.mountain,
+            R.mipmap.sky,
+            R.mipmap.city,
+            R.mipmap.mountain_view
+        )
 
+        private val titleArray: Array<String> =
+            arrayOf("Title 1", "Title2", "Title3", "Title 4", "Title 5")
 
-        private val titleArray: Array<String> = arrayOf("Title 1", "Title2" ,"Title3", "Title 4", "Title 5")
-
-        private val contentArray: Array<String> = arrayOf("Content 1", "Content 2", "Content 3", "Content 4", "Content 5")
+        private val contentArray: Array<String> =
+            arrayOf("Content 1", "Content 2", "Content 3", "Content 4", "Content 5")
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
@@ -42,7 +51,7 @@ abstract class PersistentDatabase : RoomDatabase() {
             entryDao.deleteAll()
 
             for (i in titleArray.indices) {
-                val temp = TravelEntry(0, "", titleArray[i], contentArray[i])
+                val temp = TravelEntry(0, imageNames[i].toString(), titleArray[i], contentArray[i])
                 entryDao.insertEntry(temp)
             }
 
