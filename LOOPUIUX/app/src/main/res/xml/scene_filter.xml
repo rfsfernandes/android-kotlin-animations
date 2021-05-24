@@ -90,9 +90,8 @@ For ex: 1 -> 2, 2 -> 3 ... 9 -> 10.
       <Constraint
           app:layout_constraintEnd_toEndOf="parent"
           android:layout_width="0dp"
-          android:layout_height="0dp"
+          android:layout_height="wrap_content"
           app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintDimensionRatio="1:1.5"
           app:layout_constraintStart_toStartOf="parent"
           android:id="@+id/sheetPlaceHolder">
       </Constraint>

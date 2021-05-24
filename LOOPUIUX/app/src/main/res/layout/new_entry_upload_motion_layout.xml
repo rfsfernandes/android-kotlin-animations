@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_a_photo"
         android:textColor="@color/dirty_white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,14 +49,14 @@
         fresco:placeholderImage="@mipmap/loop_logo"
         app:roundedCornerRadius="10dp"/>
 
-
-    <Button
+    <ImageButton
         android:id="@+id/buttonUpload"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:drawableStart="@drawable/ic_upload"
-        android:text="@string/upload"
+        android:layout_height="38dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_upload"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/red_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

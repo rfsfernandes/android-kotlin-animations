@@ -16,6 +16,7 @@ class TravelEntry(
     @ColumnInfo(name = "content") val content: String
 ) {
     var isNewEntry: Boolean = true
-    var isOpen: Boolean = false
+    var isDetailsOpen: Boolean = false
+    var isDeleteOpen: Boolean = false
     var alreadySeen: Boolean = false
 }

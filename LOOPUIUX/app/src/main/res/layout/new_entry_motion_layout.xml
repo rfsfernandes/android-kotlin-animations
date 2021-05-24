@@ -76,9 +76,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
+                android:id="@+id/linearLayoutEntryParent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_a_memory"
+                    android:textAlignment="center"
+                    android:textSize="28sp"
+                    android:fontFamily="@font/koho_regular"
+                    android:textStyle="bold"
+                    android:textColor="@color/dirty_white"
+                    android:layout_marginBottom="16dp"/>
+
                 <include
                     layout="@layout/new_entry_upload_motion_layout"
                     android:layout_width="match_parent"
@@ -89,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColorHint="@color/black"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     app:boxBackgroundColor="@color/dirty_white"
                     app:boxStrokeColor="@color/red_700"
                     app:counterEnabled="true"
@@ -128,8 +141,8 @@
                         android:layout_height="match_parent"
                         android:gravity="top"
                         android:hint="@string/summary"
-                        android:inputType="textMultiLine|textImeMultiLine"
                         android:lines="7"
+                        android:inputType="textMultiLine"
                         android:textColor="@color/black"
                         android:textColorHighlight="@color/red_700" />
                 </com.google.android.material.textfield.TextInputLayout>

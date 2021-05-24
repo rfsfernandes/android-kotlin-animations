@@ -1,5 +1,6 @@
 package pt.rfernandes.loopuiux.adapters
 
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -23,10 +24,13 @@ import pt.rfernandes.loopuiux.model.TravelEntry
 class RecyclerViewAdapter(
     private val context: Context,
     private val callback: RecyclerViewCallback,
+    private val recyclerView: RecyclerView
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
     private var travelEntryList: ArrayList<TravelEntry> = ArrayList()
-
+    private var viewHolderList: ArrayList<ListViewHolder> = ArrayList()
+    private var isToDelete = false
+    private var forcedClose = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,9 +39,23 @@ class RecyclerViewAdapter(
         LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
     )
 
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-
+    override fun onBindViewHolder(tempHolder: ListViewHolder, position: Int) {
+        var holder = tempHolder
         val model = travelEntryList[position]
+        holder.id = model.id
+        var foundOne = false
+
+        for (index in viewHolderList.indices) {
+            if (holder.id == viewHolderList[index].id) {
+                holder = viewHolderList[index]
+                foundOne = true
+                break
+            }
+        }
+
+        if (!foundOne) {
+            viewHolderList.add(holder)
+        }
 
         if (!model.alreadySeen) {
             holder.rootView.startAnimation(
@@ -58,44 +76,57 @@ class RecyclerViewAdapter(
         else
             holder.imageViewContent.setImageURI(model.image)
 
-        var isDetailsOpen = model.isOpen
-        var isDeleteOpen = false
+        var isDetailsOpen = model.isDetailsOpen
+        var isDeleteOpen = model.isDeleteOpen
+
+        if (isDetailsOpen) {
+            holder.motionBase.setTransition(R.id.start_to_end_list)
+            holder.textViewContent.maxLines = 2
+            holder.motionBase.transitionToStart()
+        } else if (isDeleteOpen) {
+            holder.motionBase.setTransition(R.id.start_to_delete_list)
+            holder.motionBase.transitionToStart()
+        }
+
         var hasCompleted = true
         var isToOpenDetails = false
         var isToOpenDelete = false
+
         val clickListenerOpen: View.OnClickListener = View.OnClickListener { v ->
-            if (!isDeleteOpen) {
+            if (!isDeleteOpen && hasCompleted) {
+                hasCompleted = false
                 holder.motionBase.setTransition(R.id.start_to_end_list)
                 isToOpenDetails = true
                 isToOpenDelete = false
-                if (hasCompleted) {
-                    hasCompleted = false
-                    if (!isDetailsOpen) {
-                        callback.clickedItem(position)
-                        holder.motionBase.transitionToEnd()
-                    } else {
-                        holder.motionBase.transitionToStart()
-                    }
+                forcedClose = false
+                if (!isDetailsOpen) {
+                    model.isDetailsOpen = true
+                    holder.motionBase.transitionToEnd()
+                } else {
+                    model.isDetailsOpen = false
+                    holder.motionBase.transitionToStart()
                 }
+
             }
-            v.clearFocus()
+//            v.clearFocus()
         }
-        var isToDelete = false
 
         holder.cardViewImage.setOnClickListener { v ->
-            if (!isDetailsOpen) {
+            if (!isDetailsOpen && hasCompleted) {
+                hasCompleted = false
                 holder.motionBase.setTransition(R.id.start_to_delete_list)
                 isToOpenDetails = false
                 isToOpenDelete = true
-                if (hasCompleted) {
-                    hasCompleted = false
-                    if (!isDeleteOpen)
-                        holder.motionBase.transitionToEnd()
-                    else
-                        holder.motionBase.transitionToStart()
+                forcedClose = false
+                if (!isDeleteOpen) {
+                    holder.motionBase.transitionToEnd()
+                } else {
+                    holder.motionBase.transitionToStart()
                 }
+
             }
-            v.clearFocus()
+
+//            v.clearFocus()
         }
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
@@ -108,6 +139,7 @@ class RecyclerViewAdapter(
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+                hasCompleted = true
                 if (isToOpenDetails) {
                     isDetailsOpen = !isDetailsOpen
 
@@ -115,15 +147,18 @@ class RecyclerViewAdapter(
                         holder.textViewContent.maxLines = Integer.MAX_VALUE
                     }
 
-                    model.isOpen = isDetailsOpen
-                    isToOpenDetails = false
+                    model.isDetailsOpen = isDetailsOpen
+                    if (!forcedClose)
+                        setToFalse(model.id)
                 }
 
                 if (isToOpenDelete) {
                     isDeleteOpen = !isDeleteOpen
+                    model.isDeleteOpen = isDeleteOpen
+                    if (!forcedClose)
+                        setToFalse(model.id)
                 }
 
-                hasCompleted = true
                 if (isToDelete) {
                     handleRemoveItem(holder, position)
                 }
@@ -138,12 +173,38 @@ class RecyclerViewAdapter(
         holder.chevronBackground.setOnClickListener(clickListenerOpen)
 
         val clickListenerDelete: View.OnClickListener = View.OnClickListener {
-            isToDelete = true
-
-            holder.motionBase.transitionToStart()
+            showDialogDelete("Title", "content", holder)
         }
 
         holder.imageButtonDeleteEntry.setOnClickListener(clickListenerDelete)
+
+    }
+
+    fun setToFalse(id: Int) {
+
+        var holder: ListViewHolder
+
+        for (tempHolder in viewHolderList) {
+            if (tempHolder.id != id) {
+
+                holder = tempHolder
+                for (index in travelEntryList.indices) {
+                    if (travelEntryList[index].id != id && travelEntryList[index].isDetailsOpen && holder.id == travelEntryList[index].id) {
+                        travelEntryList[index].isDetailsOpen = false
+                        forcedClose = true
+                        collapseMotionLayoutExpandDetails(holder)
+                        break
+                    } else if (travelEntryList[index].id != id && travelEntryList[index].isDeleteOpen && holder.id == travelEntryList[index].id) {
+                        travelEntryList[index].isDeleteOpen = false
+                        forcedClose = true
+                        collapseMotionLayoutDelete(holder)
+                        break
+                    }
+                }
+
+            }
+        }
+
 
     }
 
@@ -174,6 +235,28 @@ class RecyclerViewAdapter(
         holder.rootView.startAnimation(animation)
     }
 
+    private fun showDialogDelete(title: String, content: String, holder: ListViewHolder) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle(title)
+        alertDialogBuilder.setIcon(R.drawable.ic_trash)
+        alertDialogBuilder.setMessage(content)
+        alertDialogBuilder.setPositiveButton("delete") { dialog, which ->
+            dialog.dismiss()
+            isToDelete = true
+
+            holder.motionBase.transitionToStart()
+        }
+        alertDialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+            dialog.dismiss()
+            isToDelete = false
+
+            holder.motionBase.transitionToStart()
+        }
+
+        alertDialogBuilder.show()
+
+    }
+
     override fun onViewDetachedFromWindow(holder: ListViewHolder) {
         holder.clearAnimation()
     }
@@ -182,8 +265,18 @@ class RecyclerViewAdapter(
         return travelEntryList.size
     }
 
-    fun collapseMotionLayout(holder: ListViewHolder) {
+    override fun getItemId(position: Int): Long {
+        return travelEntryList[position].id.toLong()
+    }
+
+    fun collapseMotionLayoutExpandDetails(holder: ListViewHolder) {
+//        holder.motionBase.setTransition(R.id.start_to_end_list)
         holder.textViewContent.maxLines = 2
+        holder.motionBase.transitionToStart()
+    }
+
+    fun collapseMotionLayoutDelete(holder: ListViewHolder) {
+//        holder.motionBase.setTransition(R.id.start_to_delete_list)
         holder.motionBase.transitionToStart()
     }
 
@@ -198,6 +291,8 @@ class RecyclerViewAdapter(
         val rootView: View = itemView
 
         val imageButtonDeleteEntry: ImageButton = itemView.findViewById(R.id.imageButtonDeleteEntry)
+
+        var id: Int = 0
 
         fun clearAnimation() {
             rootView.clearAnimation()

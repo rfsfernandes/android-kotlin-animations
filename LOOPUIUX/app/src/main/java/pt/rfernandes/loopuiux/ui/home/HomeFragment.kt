@@ -11,9 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.widget.*
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -29,6 +27,7 @@ import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding
 import pt.rfernandes.loopuiux.model.TravelEntry
 import pt.rfernandes.loopuiux.myapp.MyApplication
 import pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
+import pt.rfernandes.loopuiux.ui.utils.hideKeyboard
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,7 +37,7 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment(), RecyclerViewCallback {
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var addEntryMotionLayout: AddEntryMotionLayout
-    private lateinit var buttonUpload: Button
+    private lateinit var buttonUpload: ImageButton
     private lateinit var newEntryUploadMotionLayout: MotionLayout
     private lateinit var textInputLayoutTitle: TextInputLayout
     private lateinit var textInputLayoutContent: TextInputLayout
@@ -47,7 +46,12 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
     }
     private val binding get() = _binding!!
     private val REQUEST_CODE = 234
+    private val removeFocusAndKeyboardClickListener = View.OnClickListener {
 
+        textInputLayoutTitle.clearFocus()
+        textInputLayoutContent.clearFocus()
+        hideKeyboard()
+    }
     private var addEntryIsOpen = false
     private var mTravelEntryList: ArrayList<TravelEntry> = arrayListOf()
     private var _binding: FragmentHomeBinding? = null
@@ -76,7 +80,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         textInputLayoutTitle = binding.root.findViewById(R.id.textInputLayoutTitle)
         textInputLayoutContent = binding.root.findViewById(R.id.textInputLayoutContent)
 
-        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this)
+        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this, binding.recyclerView)
         binding.recyclerView.adapter = recyclerViewAdapter
 
         val lm = CustomLayoutManager(requireContext())
@@ -91,6 +95,9 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         buttonUpload.setOnClickListener {
             openGalleryForImage()
         }
+
+        binding.root.findViewById<LinearLayout>(R.id.linearLayoutEntryForm).setOnClickListener(removeFocusAndKeyboardClickListener)
+        binding.root.findViewById<LinearLayout>(R.id.linearLayoutEntryParent).setOnClickListener(removeFocusAndKeyboardClickListener)
 
         binding.root.findViewById<ImageView>(R.id.newEntryIcon).setOnClickListener {
             if (addEntryIsOpen) {
@@ -226,21 +233,6 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
 
     }
 
-    override fun clickedItem(position: Int) {
-        for (index in mTravelEntryList.indices) {
-            if (index != position && mTravelEntryList[index].isOpen) {
-                mTravelEntryList[index].isOpen = false
-                val holder =
-                    binding.recyclerView.findViewHolderForAdapterPosition(index) as? RecyclerViewAdapter.ListViewHolder
-
-                if (holder != null) {
-                    recyclerViewAdapter.collapseMotionLayout(holder)
-                }
-                break
-            }
-        }
-    }
-
     override fun deletedItem(travelEntry: TravelEntry) {
         homeViewModel.deleteEntry(travelEntry)
     }
@@ -314,5 +306,6 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
             output.write(buffer, 0, bytesRead)
         }
     }
+
 
 }
