@@ -61,6 +61,11 @@ abstract class PersistentDatabase : RoomDatabase() {
                 entryDao.insertEntry(temp)
             }
 
+            for (i in titleArray.indices) {
+                val temp = TravelEntry(0, imageNames[i].toString(), titleArray[i], contentArray[i])
+                entryDao.insertEntry(temp)
+            }
+
         }
     }
 
