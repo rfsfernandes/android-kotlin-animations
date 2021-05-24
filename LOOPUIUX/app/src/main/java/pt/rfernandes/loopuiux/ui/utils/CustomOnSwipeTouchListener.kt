@@ -21,8 +21,8 @@ open class CustomOnSwipeTouchListener(context: Context?) : OnTouchListener {
 
     companion object {
 
-        private val SWIPE_THRESHOLD = 50
-        private val SWIPE_VELOCITY_THRESHOLD = 50
+        private val SWIPE_THRESHOLD = 20
+        private val SWIPE_VELOCITY_THRESHOLD = 20
     }
 
     init {

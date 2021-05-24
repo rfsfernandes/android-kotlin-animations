@@ -117,40 +117,44 @@ class RecyclerViewAdapter(
 
         holder.cardViewImage.setOnClickListener(clickListenerOpenDetails)
 
+        val customTouchListener: CustomOnSwipeTouchListener =
+            object : CustomOnSwipeTouchListener(context) {
 
-        holder.cardViewImage.setOnTouchListener(
-        object : CustomOnSwipeTouchListener(context) {
+                override fun onSwipeLeft() {
+                    super.onSwipeLeft()
+                    if (!isDetailsOpen) {
+//                        hasCompleted = false
+                        holder.motionBase.setTransition(R.id.start_to_delete_list)
+                        isToOpenDetails = false
+                        isToOpenDelete = true
+                        forcedClose = false
 
-            override fun onSwipeLeft() {
-                super.onSwipeLeft()
-                if (!isDetailsOpen && hasCompleted) {
-                    hasCompleted = false
-                    holder.motionBase.setTransition(R.id.start_to_delete_list)
-                    isToOpenDetails = false
-                    isToOpenDelete = true
-                    forcedClose = false
+                        model.isDeleteOpen = false
+                        holder.motionBase.transitionToStart()
 
-                    model.isDeleteOpen = false
-                    holder.motionBase.transitionToStart()
+                    }
+                }
 
+                override fun onSwipeRight() {
+                    super.onSwipeRight()
+                    if (!isDetailsOpen) {
+//                        hasCompleted = false
+                        holder.motionBase.setTransition(R.id.start_to_delete_list)
+                        isToOpenDetails = false
+                        isToOpenDelete = true
+                        forcedClose = false
+
+                        model.isDeleteOpen = true
+                        holder.motionBase.transitionToEnd()
+
+                    }
                 }
             }
 
-            override fun onSwipeRight() {
-                super.onSwipeRight()
-                if (!isDetailsOpen && hasCompleted) {
-                    hasCompleted = false
-                    holder.motionBase.setTransition(R.id.start_to_delete_list)
-                    isToOpenDetails = false
-                    isToOpenDelete = true
-                    forcedClose = false
-
-                    model.isDeleteOpen = true
-                    holder.motionBase.transitionToEnd()
-
-                }
-            }
-        })
+        holder.cardViewImage.setOnTouchListener(customTouchListener)
+        holder.textViewContentTitle.setOnTouchListener(customTouchListener)
+        holder.textViewContent.setOnTouchListener(customTouchListener)
+        holder.imageViewContent.setOnTouchListener(customTouchListener)
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
