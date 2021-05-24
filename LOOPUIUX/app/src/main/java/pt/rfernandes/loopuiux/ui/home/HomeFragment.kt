@@ -20,7 +20,7 @@ import androidx.lifecycle.Observer
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.adapters.CustomLayoutManager
+import pt.rfernandes.loopuiux.ui.utils.CustomLayoutManager
 import pt.rfernandes.loopuiux.adapters.RecyclerViewAdapter
 import pt.rfernandes.loopuiux.adapters.RecyclerViewCallback
 import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding

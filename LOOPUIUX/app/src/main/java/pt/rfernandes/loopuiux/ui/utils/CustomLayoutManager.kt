@@ -1,4 +1,4 @@
-package pt.rfernandes.loopuiux.adapters
+package pt.rfernandes.loopuiux.ui.utils
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

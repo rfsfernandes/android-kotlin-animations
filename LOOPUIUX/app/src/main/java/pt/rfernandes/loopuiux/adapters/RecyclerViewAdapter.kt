@@ -3,6 +3,7 @@ package pt.rfernandes.loopuiux.adapters
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.model.TravelEntry
+import pt.rfernandes.loopuiux.ui.utils.CustomOnSwipeTouchListener
+import kotlin.math.abs
 
 
 /**
@@ -92,7 +95,7 @@ class RecyclerViewAdapter(
         var isToOpenDetails = false
         var isToOpenDelete = false
 
-        val clickListenerOpen: View.OnClickListener = View.OnClickListener { v ->
+        val clickListenerOpenDetails: View.OnClickListener = View.OnClickListener { v ->
             if (!isDeleteOpen && hasCompleted) {
                 hasCompleted = false
                 holder.motionBase.setTransition(R.id.start_to_end_list)
@@ -108,10 +111,9 @@ class RecyclerViewAdapter(
                 }
 
             }
-//            v.clearFocus()
         }
 
-        holder.cardViewImage.setOnClickListener { v ->
+        val clickListenerOpenDelete: View.OnClickListener = View.OnClickListener {
             if (!isDetailsOpen && hasCompleted) {
                 hasCompleted = false
                 holder.motionBase.setTransition(R.id.start_to_delete_list)
@@ -119,15 +121,49 @@ class RecyclerViewAdapter(
                 isToOpenDelete = true
                 forcedClose = false
                 if (!isDeleteOpen) {
+                    model.isDeleteOpen = true
                     holder.motionBase.transitionToEnd()
                 } else {
+                    model.isDeleteOpen = false
                     holder.motionBase.transitionToStart()
                 }
+            }
+        }
 
+        holder.cardViewImage.setOnClickListener(clickListenerOpenDetails)
+
+        holder.cardViewImage.setOnTouchListener(object : CustomOnSwipeTouchListener(context) {
+
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                if (!isDetailsOpen && hasCompleted) {
+                    hasCompleted = false
+                    holder.motionBase.setTransition(R.id.start_to_delete_list)
+                    isToOpenDetails = false
+                    isToOpenDelete = true
+                    forcedClose = false
+
+                    model.isDeleteOpen = false
+                    holder.motionBase.transitionToStart()
+
+                }
             }
 
-//            v.clearFocus()
-        }
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                if (!isDetailsOpen && hasCompleted) {
+                    hasCompleted = false
+                    holder.motionBase.setTransition(R.id.start_to_delete_list)
+                    isToOpenDetails = false
+                    isToOpenDelete = true
+                    forcedClose = false
+
+                    model.isDeleteOpen = true
+                    holder.motionBase.transitionToEnd()
+
+                }
+            }
+        })
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
@@ -170,7 +206,7 @@ class RecyclerViewAdapter(
 
         })
 
-        holder.chevronBackground.setOnClickListener(clickListenerOpen)
+        holder.chevronBackground.setOnClickListener(clickListenerOpenDetails)
 
         val clickListenerDelete: View.OnClickListener = View.OnClickListener {
             showDialogDelete("Title", "content", holder)
@@ -269,14 +305,12 @@ class RecyclerViewAdapter(
         return travelEntryList[position].id.toLong()
     }
 
-    fun collapseMotionLayoutExpandDetails(holder: ListViewHolder) {
-//        holder.motionBase.setTransition(R.id.start_to_end_list)
+    private fun collapseMotionLayoutExpandDetails(holder: ListViewHolder) {
         holder.textViewContent.maxLines = 2
         holder.motionBase.transitionToStart()
     }
 
-    fun collapseMotionLayoutDelete(holder: ListViewHolder) {
-//        holder.motionBase.setTransition(R.id.start_to_delete_list)
+    private fun collapseMotionLayoutDelete(holder: ListViewHolder) {
         holder.motionBase.transitionToStart()
     }
 
