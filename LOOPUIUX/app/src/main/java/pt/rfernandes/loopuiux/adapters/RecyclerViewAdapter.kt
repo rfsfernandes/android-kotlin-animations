@@ -152,9 +152,7 @@ class RecyclerViewAdapter(
             }
 
         holder.cardViewImage.setOnTouchListener(customTouchListener)
-        holder.textViewContentTitle.setOnTouchListener(customTouchListener)
-        holder.textViewContent.setOnTouchListener(customTouchListener)
-        holder.imageViewContent.setOnTouchListener(customTouchListener)
+
 
         holder.motionBase.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
