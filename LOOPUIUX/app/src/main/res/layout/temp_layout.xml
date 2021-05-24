@@ -7,123 +7,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/imageButtonDeleteEntry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:background="@android:color/transparent"
-        android:elevation="3dp"
-        android:tint="@color/dirty_white"
-        app:layout_constraintBottom_toBottomOf="@+id/cardViewDeleteButton"
-        app:layout_constraintStart_toStartOf="@+id/cardViewDeleteButton"
-        app:layout_constraintTop_toTopOf="@+id/cardViewDeleteButton"
-        app:srcCompat="@drawable/ic_trash" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewDeleteButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        app:cardBackgroundColor="@color/red_700"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="@id/cardView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cardView">
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutTitle"
+        style="@style/text_input_style"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        app:cardBackgroundColor="@color/dirty_white"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/imageView2"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="6dp"
-        app:layout_constraintEnd_toEndOf="@+id/cardView"
-        app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/cardView">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/imageViewContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:placeholderImage="@mipmap/loop_logo"
-            app:layout_constraintEnd_toEndOf="@+id/cardView"
-            app:layout_constraintStart_toStartOf="@+id/cardView"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.cardview.widget.CardView>
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.7"
-        android:elevation="6dp"
-        android:background="@drawable/shade_background"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="@+id/imageView2"
-        app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-    <TextView
-        android:id="@+id/textViewContentTitle"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:elevation="6dp"
-        android:text="title"
-        android:textColor="@color/dirty_white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/imageButtonChevronBackground"
-        app:layout_constraintEnd_toEndOf="@+id/cardView"
-        app:layout_constraintStart_toEndOf="@+id/imageButtonChevronBackground"
-        app:layout_constraintTop_toTopOf="@+id/imageButtonChevronBackground" />
+        app:boxStrokeErrorColor="@color/red_500"
+        app:counterMaxLength="50"
+        app:errorEnabled="true"
+        app:errorIconTint="@color/red_500">
 
-    <TextView
-        android:id="@+id/textViewContent"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="16dp"
-        android:ellipsize="end"
-        android:elevation="6dp"
-        android:paddingBottom="20dp"
-        android:text="@string/lorem_content"
-        android:textColor="@color/dirty_white"
-        app:layout_constraintEnd_toEndOf="@+id/textViewContentTitle"
-        app:layout_constraintStart_toStartOf="@+id/textViewContentTitle"
-        app:layout_constraintTop_toBottomOf="@+id/textViewContentTitle" />
-
-    <ImageButton
-        android:id="@+id/imageButtonChevronBackground"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:alpha="1"
-        android:elevation="6dp"
-        android:background="@drawable/chevron_background"
-        android:src="@drawable/ic_chevron_right"
-        android:tint="@color/red_700"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
-        app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/cardView" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/red_700" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -93,7 +93,6 @@ open class CustomOnSwipeTouchListener(context: Context?) : OnTouchListener {
             return result
         }
 
-
     }
 
     open fun onSwipeRight() {}

@@ -7,7 +7,7 @@
         android:id="@+id/start_to_end_list"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="500"></Transition>
+        motion:duration="500"/>
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
@@ -163,19 +163,29 @@
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toEndOf="@+id/imageButtonDeleteEntry"
             android:layout_marginStart="20dp" />
+        <Constraint
+            android:id="@+id/imageButtonChevronBackground"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            motion:layout_constraintBottom_toBottomOf="@+id/cardView"
+            android:alpha="1"
+            android:layout_marginStart="8dp"
+            motion:layout_constraintTop_toTopOf="@+id/cardView"
+            motion:layout_constraintStart_toStartOf="@+id/cardView"
+            android:rotation="-180" />
     </ConstraintSet>
 
     <Transition
         android:id="@+id/start_to_delete_list"
         motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/delete_entry" ></Transition>
+        motion:constraintSetEnd="@+id/delete_entry" />
     <Transition
         android:id="@+id/delete_to_start_list"
         motion:constraintSetStart="@+id/delete_entry"
-        motion:constraintSetEnd="@+id/start" ></Transition>
+        motion:constraintSetEnd="@+id/start" />
     <Transition
         android:id="@+id/end_to_start_list"
         motion:constraintSetStart="@+id/end"
-        motion:constraintSetEnd="@+id/start" ></Transition>
+        motion:constraintSetEnd="@+id/start" />
 
 </MotionScene>

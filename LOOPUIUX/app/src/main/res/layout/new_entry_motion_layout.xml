@@ -87,7 +87,7 @@
                     android:text="@string/add_a_memory"
                     android:textAlignment="center"
                     android:textSize="28sp"
-                    android:fontFamily="@font/koho_regular"
+                    android:fontFamily="@font/koho_semi_bold"
                     android:textStyle="bold"
                     android:textColor="@color/dirty_white"
                     android:layout_marginBottom="16dp"/>
@@ -97,20 +97,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:id="@+id/textViewErrorImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/please_pick_a_photo"
+                    android:textAlignment="textStart"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/koho_regular"
+                    android:textColor="@color/red_500"
+                    android:visibility="invisible"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayoutTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="@color/black"
-                    android:layout_marginTop="24dp"
-                    app:boxBackgroundColor="@color/dirty_white"
-                    app:boxStrokeColor="@color/red_700"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="50"
-                    app:counterOverflowTextColor="@color/red_700"
-                    app:counterTextColor="@color/dirty_white"
-                    app:hintTextColor="@color/black">
-
+                    android:layout_marginTop="14dp"
+                    style="@style/text_input_style"
+                    app:counterMaxLength="50">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -127,14 +133,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:textColorHint="@color/black"
-                    app:boxBackgroundColor="@color/dirty_white"
-                    app:boxStrokeColor="@color/red_700"
-                    app:counterEnabled="true"
                     app:counterMaxLength="300"
-                    app:counterOverflowTextColor="@color/red_700"
-                    app:counterTextColor="@color/dirty_white"
-                    app:hintTextColor="@color/black">
+                    style="@style/text_input_style">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"

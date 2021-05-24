@@ -7,11 +7,18 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -20,13 +27,13 @@ import androidx.lifecycle.Observer
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
-import pt.rfernandes.loopuiux.ui.utils.CustomLayoutManager
 import pt.rfernandes.loopuiux.adapters.RecyclerViewAdapter
 import pt.rfernandes.loopuiux.adapters.RecyclerViewCallback
 import pt.rfernandes.loopuiux.databinding.FragmentHomeBinding
 import pt.rfernandes.loopuiux.model.TravelEntry
 import pt.rfernandes.loopuiux.myapp.MyApplication
 import pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
+import pt.rfernandes.loopuiux.ui.utils.CustomLayoutManager
 import pt.rfernandes.loopuiux.ui.utils.hideKeyboard
 import java.io.*
 import java.text.SimpleDateFormat
@@ -80,7 +87,35 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         textInputLayoutTitle = binding.root.findViewById(R.id.textInputLayoutTitle)
         textInputLayoutContent = binding.root.findViewById(R.id.textInputLayoutContent)
 
-        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this, binding.recyclerView)
+        textInputLayoutTitle.editText?.addTextChangedListener(object: TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                titleNotValid(s.toString().isNotEmpty())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
+        textInputLayoutContent.editText?.addTextChangedListener(object: TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                contentNotValid(s.toString().isNotEmpty())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
+        recyclerViewAdapter = RecyclerViewAdapter(requireContext(), this)
         binding.recyclerView.adapter = recyclerViewAdapter
 
         val lm = CustomLayoutManager(requireContext())
@@ -96,8 +131,10 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
             openGalleryForImage()
         }
 
-        binding.root.findViewById<LinearLayout>(R.id.linearLayoutEntryForm).setOnClickListener(removeFocusAndKeyboardClickListener)
-        binding.root.findViewById<LinearLayout>(R.id.linearLayoutEntryParent).setOnClickListener(removeFocusAndKeyboardClickListener)
+        binding.root.findViewById<LinearLayout>(R.id.linearLayoutEntryForm)
+            .setOnClickListener(removeFocusAndKeyboardClickListener)
+        binding.root.findViewById<LinearLayout>(R.id.linearLayoutEntryParent)
+            .setOnClickListener(removeFocusAndKeyboardClickListener)
 
         binding.root.findViewById<ImageView>(R.id.newEntryIcon).setOnClickListener {
             if (addEntryIsOpen) {
@@ -130,11 +167,29 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
 
 
     private fun validateForm(): Boolean {
-        return (imageURI.isNotEmpty() &&
-                (textInputLayoutContent.editText?.text.toString().isNotEmpty() &&
-                        textInputLayoutContent.editText?.text?.length!! <= textInputLayoutContent.counterMaxLength)
-                && (textInputLayoutTitle.editText?.text.toString().isNotEmpty() &&
-                textInputLayoutTitle.editText?.text?.length!! <= textInputLayoutTitle.counterMaxLength))
+        val contentValid = (textInputLayoutContent.editText?.text.toString().isNotEmpty() &&
+                textInputLayoutContent.editText?.text?.length!! <= textInputLayoutContent.counterMaxLength)
+        val titleValid = (textInputLayoutTitle.editText?.text.toString().isNotEmpty() &&
+                textInputLayoutTitle.editText?.text?.length!! <= textInputLayoutTitle.counterMaxLength)
+        val imageValid = imageURI.isNotEmpty()
+
+        binding.root.findViewById<TextView>(R.id.textViewErrorImage).visibility =
+            if (imageValid) INVISIBLE else VISIBLE
+
+        titleNotValid(titleValid)
+        contentNotValid(contentValid)
+
+        return contentValid && titleValid && imageValid
+    }
+
+    private fun titleNotValid(titleValid: Boolean){
+        textInputLayoutTitle.error = if (titleValid) "" else getString(R.string.error_field)
+        textInputLayoutTitle.isErrorEnabled = !titleValid
+    }
+
+    private fun contentNotValid(contentValid: Boolean){
+        textInputLayoutContent.error = if (contentValid) "" else getString(R.string.error_field)
+        textInputLayoutContent.isErrorEnabled = !contentValid
     }
 
     private fun handleImageButtonRemove() {

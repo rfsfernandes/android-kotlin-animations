@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_dialog_background"
+    android:backgroundTint="@color/black"
+    android:orientation="vertical"
+    android:paddingTop="25dp">
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:fontFamily="@font/koho_semi_bold"
+        android:text="@string/deleting_memory"
+        android:textColor="@color/dirty_white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="25dp"
+        android:text="@string/deleting_memory_message"
+        android:textColor="@color/dirty_white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="150dp"
+        android:orientation="horizontal"
+        android:paddingTop="14dp">
+
+        <Button
+            android:id="@+id/buttonDismissDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_background"
+            android:paddingBottom="30dp"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/buttonAcceptDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="delete"
+            android:textColor="@color/red_500" />
+    </LinearLayout>
 </LinearLayout>

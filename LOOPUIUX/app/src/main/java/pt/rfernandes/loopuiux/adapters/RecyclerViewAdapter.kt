@@ -1,5 +1,6 @@
 package pt.rfernandes.loopuiux.adapters
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.model.TravelEntry
 import pt.rfernandes.loopuiux.ui.utils.CustomOnSwipeTouchListener
@@ -26,8 +29,7 @@ import kotlin.math.abs
  */
 class RecyclerViewAdapter(
     private val context: Context,
-    private val callback: RecyclerViewCallback,
-    private val recyclerView: RecyclerView
+    private val callback: RecyclerViewCallback
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.ListViewHolder>() {
     private var travelEntryList: ArrayList<TravelEntry> = ArrayList()
@@ -113,26 +115,11 @@ class RecyclerViewAdapter(
             }
         }
 
-        val clickListenerOpenDelete: View.OnClickListener = View.OnClickListener {
-            if (!isDetailsOpen && hasCompleted) {
-                hasCompleted = false
-                holder.motionBase.setTransition(R.id.start_to_delete_list)
-                isToOpenDetails = false
-                isToOpenDelete = true
-                forcedClose = false
-                if (!isDeleteOpen) {
-                    model.isDeleteOpen = true
-                    holder.motionBase.transitionToEnd()
-                } else {
-                    model.isDeleteOpen = false
-                    holder.motionBase.transitionToStart()
-                }
-            }
-        }
-
         holder.cardViewImage.setOnClickListener(clickListenerOpenDetails)
 
-        holder.cardViewImage.setOnTouchListener(object : CustomOnSwipeTouchListener(context) {
+
+        holder.cardViewImage.setOnTouchListener(
+        object : CustomOnSwipeTouchListener(context) {
 
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
@@ -209,7 +196,7 @@ class RecyclerViewAdapter(
         holder.chevronBackground.setOnClickListener(clickListenerOpenDetails)
 
         val clickListenerDelete: View.OnClickListener = View.OnClickListener {
-            showDialogDelete("Title", "content", holder)
+            showDialogDelete(holder)
         }
 
         holder.imageButtonDeleteEntry.setOnClickListener(clickListenerDelete)
@@ -257,6 +244,7 @@ class RecyclerViewAdapter(
             }
 
             override fun onAnimationEnd(animation: Animation?) {
+                isToDelete = false
                 callback.deletedItem(travelEntryList[position])
                 travelEntryList.removeAt(position)
                 notifyDataSetChanged()
@@ -271,25 +259,31 @@ class RecyclerViewAdapter(
         holder.rootView.startAnimation(animation)
     }
 
-    private fun showDialogDelete(title: String, content: String, holder: ListViewHolder) {
-        val alertDialogBuilder = AlertDialog.Builder(context)
-        alertDialogBuilder.setTitle(title)
-        alertDialogBuilder.setIcon(R.drawable.ic_trash)
-        alertDialogBuilder.setMessage(content)
-        alertDialogBuilder.setPositiveButton("delete") { dialog, which ->
-            dialog.dismiss()
+    private fun showDialogDelete(holder: ListViewHolder) {
+        val bottomSheetDialog = BottomSheetDialog(context)
+
+        bottomSheetDialog.setContentView(R.layout.custom_dialog_layout)
+
+        bottomSheetDialog.findViewById<Button>(R.id.buttonAcceptDialog)?.setOnClickListener {
+            bottomSheetDialog.dismiss()
             isToDelete = true
 
             holder.motionBase.transitionToStart()
         }
-        alertDialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, which ->
-            dialog.dismiss()
+
+        bottomSheetDialog.findViewById<Button>(R.id.buttonDismissDialog)?.setOnClickListener {
+            bottomSheetDialog.dismiss()
+
+        }
+
+        bottomSheetDialog.setOnDismissListener {
             isToDelete = false
 
             holder.motionBase.transitionToStart()
         }
 
-        alertDialogBuilder.show()
+        bottomSheetDialog.show()
+
 
     }
 
