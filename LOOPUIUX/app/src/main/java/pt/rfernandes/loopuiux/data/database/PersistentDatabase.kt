@@ -32,10 +32,16 @@ abstract class PersistentDatabase : RoomDatabase() {
         )
 
         private val titleArray: Array<String> =
-            arrayOf("Title 1", "Title2", "Title3", "Title 4", "Title 5")
+            arrayOf("City Life", "Together with nature", "The is the limit", "New Life", "Up and downs")
 
         private val contentArray: Array<String> =
-            arrayOf("Content 1", "Content 2", "Content 3", "Content 4", "Content 5")
+            arrayOf(
+                "Jobs fill your pockets, adventures fill your soul.",
+                "Remember that happiness is a way of travel, not a destination.",
+                "The world is a book and those who do not travel read only one page.",
+                "In the end, we only regret the chances we didn’t take.",
+                "My goal is to run out of pages in my passport."
+            )
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
