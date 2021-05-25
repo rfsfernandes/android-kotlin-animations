@@ -32,7 +32,7 @@ abstract class PersistentDatabase : RoomDatabase() {
         )
 
         private val titleArray: Array<String> =
-            arrayOf("City Life", "Together with nature", "The is the limit", "New Life", "Up and downs")
+            arrayOf("City Life", "Together with nature", "The sky is the limit", "New Life", "Up and downs")
 
         private val contentArray: Array<String> =
             arrayOf(

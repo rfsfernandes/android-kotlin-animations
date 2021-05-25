@@ -19,12 +19,19 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.Nullable
+import androidx.constraintlayout.motion.widget.Animatable
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.controller.BaseControllerListener
+import com.facebook.drawee.controller.ControllerListener
+import com.facebook.drawee.interfaces.DraweeController
 import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.image.ImageInfo
 import com.google.android.material.textfield.TextInputLayout
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.adapters.RecyclerViewAdapter
@@ -87,7 +94,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
         textInputLayoutTitle = binding.root.findViewById(R.id.textInputLayoutTitle)
         textInputLayoutContent = binding.root.findViewById(R.id.textInputLayoutContent)
 
-        textInputLayoutTitle.editText?.addTextChangedListener(object: TextWatcher {
+        textInputLayoutTitle.editText?.addTextChangedListener(object : TextWatcher {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -101,7 +108,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
 
         })
 
-        textInputLayoutContent.editText?.addTextChangedListener(object: TextWatcher {
+        textInputLayoutContent.editText?.addTextChangedListener(object : TextWatcher {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }

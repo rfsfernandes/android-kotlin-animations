@@ -55,7 +55,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/list_item" />
+        tools:listitem="@layout/list_item"
+        android:paddingBottom="104dp"/>
 
     <pt.rfernandes.loopuiux.ui.home.travel_entry_motion_layout.AddEntryMotionLayout
         android:id="@+id/add_entry_motion_layout"

@@ -63,8 +63,7 @@
             android:id="@+id/imageViewContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:placeholderImage="@mipmap/loop_logo" />
+            android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
     <View
@@ -100,14 +99,13 @@
 
     <TextView
         android:id="@+id/textViewContent"
+        style="@style/content_style"
         android:layout_width="0dp"
         android:layout_height="75dp"
-        android:layout_marginTop="0dp"
+        android:clickable="false"
         android:elevation="4dp"
         android:ellipsize="end"
         android:focusable="false"
-        android:clickable="false"
-        style="@style/content_style"
         android:paddingBottom="20dp"
         android:text="@string/lorem_content"
         android:textColor="@color/dirty_white"

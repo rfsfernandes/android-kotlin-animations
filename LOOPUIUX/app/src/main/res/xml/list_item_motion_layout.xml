@@ -178,7 +178,9 @@
     <Transition
         android:id="@+id/start_to_delete_list"
         motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/delete_entry" ></Transition>
+        motion:constraintSetEnd="@+id/delete_entry"
+        motion:motionInterpolator="cubic(1,0.27,1,0)"
+        motion:autoTransition="none"></Transition>
     <Transition
         android:id="@+id/delete_to_start_list"
         motion:constraintSetStart="@+id/delete_entry"
