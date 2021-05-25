@@ -327,9 +327,7 @@ class HomeFragment : Fragment(), RecyclerViewCallback {
             } catch (e: Exception) {
                 Log.d("Error onactivityresult", "onActivityResult: $e")
             }
-
-            // handle chosen image
-
+            
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     newEntryUploadMotionLayout
