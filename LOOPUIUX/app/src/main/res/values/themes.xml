@@ -12,7 +12,13 @@
     <!-- Status bar color. -->
     <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
     <item name="fontFamily">@font/koho_regular</item>
+    <item name="android:windowActivityTransitions">true</item>
     <!-- Customize your theme here. -->
+  </style>
+
+  <style name="Theme.LOOPUIUX.NoActionBar.fullscreen"  parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowFullscreen">true</item>
   </style>
 
   <style name="Theme.LOOPUIUX.NoActionBar">

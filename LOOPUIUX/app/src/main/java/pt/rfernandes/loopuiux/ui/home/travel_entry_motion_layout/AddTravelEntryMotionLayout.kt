@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.motion.widget.MotionScene
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import pt.rfernandes.loopuiux.MainActivity
+import pt.rfernandes.loopuiux.ui.activities.MainActivity
 import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.databinding.NewEntryMotionLayoutBinding
 import pt.rfernandes.loopuiux.ui.utils.MultiListenerMotionLayout

@@ -1,4 +1,4 @@
-package pt.rfernandes.loopuiux
+package pt.rfernandes.loopuiux.ui.activities
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.google.android.material.appbar.AppBarLayout
+import pt.rfernandes.loopuiux.R
 import pt.rfernandes.loopuiux.ui.utils.ToolbarCustomBehaviour
 
 class MainActivity : AppCompatActivity() {
