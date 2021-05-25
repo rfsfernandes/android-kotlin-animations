@@ -279,8 +279,6 @@ class RecyclerViewAdapter(
         }
 
         bottomSheetDialog.setOnDismissListener {
-            isToDelete = false
-
             holder.motionBase.transitionToStart()
         }
 
