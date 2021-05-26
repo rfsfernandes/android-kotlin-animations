@@ -1,0 +1,17 @@
+17/05 -> 21:30 to 23:30 -> Inspiration Gathering and Planning -> 2h
+
+18/05 -> 21h to 00:30 -> Created the project again and began some experimentations (self note: go for a list view that expands when the item is clicked in a way that the item almost turns into a card) -> 3.5h
+
+19/05 -> 21 to 1:30 -> Created the list and the expandable cards. Button to add a new post should be the next step -> 4.5h
+
+20/05 -> 21:30 to 01:00 -> Button to add new entry and form created -> 3.5
+
+21/05 -> 22:00 to 02:00 -> Form is working and is adding new item do adapter. Should add animation to new item that joined the list -> 4h
+
+22/05 -> 16:30 to 19:30, 21 to 02:30 -> Everything related to development is done. Time to work on design -> 3h + 5.5h
+
+23/05 -> 17h to 20:30, 21:30 to 02:00 -> Tweaks and fix’s -> 3.5h + 4.5h
+
+24/05 -> 18:30 to 20:00, 21:30 to 00:00-> Added improvements and tested with user. Made changes based on the input -> 1.5h + 2.5h
+
+25/05 -> 10:30 to 11, 18:30 to 20:30, 22:00 to 00:00 -> Created splash screen with shapeshifter animation -> 0.5 + 2h + 2h

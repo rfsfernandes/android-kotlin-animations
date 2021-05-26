@@ -17,8 +17,6 @@ var animationPlaybackSpeed: Double = 0.8
  *   Class AddEntryMotionLayout created at 5/20/21 18:57 for the project LOOP UI&UX
  *   By: rodrigofernandes
  *
- *   A MotionLayout version of [FiltersLayout]
- *   All Transitions and ConstraintSets are defined in R.xml.scene_filter
  *
  *   Code in this class contains mostly only choreographing the transitions.
  */
